@@ -8,7 +8,7 @@ data class TransportService(
     val rating: Float,
     val reviewCount: String,
     val price: Int,
-    val imageRes: Int, // Đổi từ String sang Int để dùng R.drawable
+    val imageRes: Int,
     val location: String,
     val type: TransportType
 )
@@ -25,5 +25,6 @@ enum class TransportType {
 data class TransportCategory(
     val type: TransportType,
     val title: String,
-    val icon: String
+    val icon: String,
+    val backgroundImage: Int
 )

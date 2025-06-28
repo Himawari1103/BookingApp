@@ -25,6 +25,8 @@ import com.example.mainapp.screens.roomlist.RoomListScreen
 import com.example.mainapp.screens.profile.ProfileScreen
 import com.example.mainapp.screens.transportation.TransportationScreen
 import com.example.mainapp.screens.busdetail.BusDetailScreen
+import com.example.mainapp.screens.tourism.TourismScreen
+import com.example.mainapp.screens.tourismdetail.TourismDetailScreen
 
 @Composable
 fun AppNavigation() {
@@ -136,6 +138,20 @@ fun AppNavigation() {
             BusDetailScreen(
                 navController = navController,
                 serviceId = busId
+            )
+        }
+
+        // Màn hình du lịch
+        composable("tourism") {
+            TourismScreen(navController = navController)
+        }
+
+        // Màn hình chi tiết du lịch
+        composable("tourism_detail/{destination}") { backStackEntry ->
+            val destination = backStackEntry.arguments?.getString("destination") ?: ""
+            TourismDetailScreen(
+                navController = navController,
+                destination = destination
             )
         }
     }

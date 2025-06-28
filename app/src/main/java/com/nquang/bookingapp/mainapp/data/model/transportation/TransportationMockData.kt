@@ -13,7 +13,7 @@ object TransportationMockData {
             rating = 4.1f,
             reviewCount = "9K+",
             price = 320000,
-            imageRes = R.drawable.xebuyt1, // Sử dụng R.drawable
+            imageRes = R.drawable.xebuyt1,
             location = "Hà Nội",
             type = TransportType.BUS
         ),
@@ -40,99 +40,132 @@ object TransportationMockData {
             imageRes = R.drawable.xebuyt3,
             location = "Đà Nẵng",
             type = TransportType.BUS
-        ),
+        )
+    )
+
+    val trainServices = listOf(
         TransportService(
-            id = "bus_4",
-            name = "Vé Xe Giường Nằm TP.HCM - Đà Lạt",
-            company = "Saigon Tourist",
-            route = "TP.HCM - Đà Lạt",
-            rating = 4.4f,
-            reviewCount = "15K+",
-            price = 350000,
-            imageRes = R.drawable.xebuyt4,
-            location = "TP Hồ Chí Minh",
-            type = TransportType.BUS
-        ),
-        TransportService(
-            id = "bus_5",
-            name = "Vé Xe Buýt Đi Chùng đi giữa Phnom Penh và Cao Cấp",
-            company = "Mekong Express",
-            route = "Phnom Penh - Cao Cấp",
-            rating = 4.4f,
-            reviewCount = "10K+",
-            price = 530000,
-            imageRes = R.drawable.xebuyt5,
-            location = "Phnom Penh",
-            type = TransportType.BUS
-        ),
-        TransportService(
-            id = "bus_6",
-            name = "Vé Xe Buýt Nha Trang - Đà Lạt",
-            company = "Phuong Trang",
-            route = "Nha Trang - Đà Lạt",
+            id = "train_1",
+            name = "Vé Tàu Hỏa Hà Nội - TP.HCM",
+            company = "Đường Sắt Việt Nam",
+            route = "Hà Nội - TP.HCM",
             rating = 4.2f,
-            reviewCount = "8K+",
-            price = 180000,
-            imageRes = R.drawable.xebuyt6,
-            location = "Nha Trang",
-            type = TransportType.BUS
+            reviewCount = "15K+",
+            price = 850000,
+            imageRes = R.drawable.tauhoa,
+            location = "Hà Nội",
+            type = TransportType.TRAIN
         ),
         TransportService(
-            id = "bus_7",
-            name = "Vé Xe Limousine Hà Nội - Hạ Long",
-            company = "Queen Cafe",
-            route = "Hà Nội - Hạ Long",
+            id = "train_2",
+            name = "Vé Tàu Hỏa Hà Nội - Đà Nẵng",
+            company = "Đường Sắt Việt Nam",
+            route = "Hà Nội - Đà Nẵng",
+            rating = 4.0f,
+            reviewCount = "8K+",
+            price = 650000,
+            imageRes = R.drawable.tauhoa,
+            location = "Hà Nội",
+            type = TransportType.TRAIN
+        )
+    )
+
+    val carRentalServices = listOf(
+        TransportService(
+            id = "car_1",
+            name = "Thuê Xe 4 Chỗ Toyota Vios",
+            company = "Mioto",
+            route = "Hà Nội",
             rating = 4.5f,
             reviewCount = "12K+",
-            price = 250000,
-            imageRes = R.drawable.xebuyt7,
+            price = 800000,
+            imageRes = R.drawable.thuexe,
             location = "Hà Nội",
-            type = TransportType.BUS
-        ),
+            type = TransportType.CAR_RENTAL
+        )
+    )
+
+    val airportShuttleServices = listOf(
         TransportService(
-            id = "bus_8",
-            name = "Vé Xe Buýt TP.HCM - Vũng Tàu",
-            company = "Kumho Samco",
-            route = "TP.HCM - Vũng Tàu",
+            id = "shuttle_1",
+            name = "Xe Đưa Đón Sân Bay Nội Bài",
+            company = "Airport Shuttle",
+            route = "Nội Bài - Hà Nội",
             rating = 4.3f,
-            reviewCount = "20K+",
-            price = 120000,
-            imageRes = R.drawable.xebuyt8,
-            location = "TP Hồ Chí Minh",
-            type = TransportType.BUS
-        ),
-        TransportService(
-            id = "bus_9",
-            name = "Vé Xe Giường Nằm Hà Nội - Ninh Bình",
-            company = "Hoang Long",
-            route = "Hà Nội - Ninh Bình",
-            rating = 4.0f,
-            reviewCount = "6K+",
+            reviewCount = "5K+",
             price = 150000,
-            imageRes = R.drawable.xebuyt9,
+            imageRes = R.drawable.xesanbay,
             location = "Hà Nội",
-            type = TransportType.BUS
-        ),
+            type = TransportType.AIRPORT_SHUTTLE
+        )
+    )
+
+    val flightServices = listOf(
         TransportService(
-            id = "bus_10",
-            name = "Vé Xe Buýt Cần Thơ - TP.HCM",
-            company = "Mai Linh Express",
-            route = "Cần Thơ - TP.HCM",
-            rating = 4.1f,
-            reviewCount = "14K+",
-            price = 200000,
-            imageRes = R.drawable.xebuyt10,
-            location = "Cần Thơ",
-            type = TransportType.BUS
+            id = "flight_1",
+            name = "Vé Máy Bay Hà Nội - TP.HCM",
+            company = "Vietnam Airlines",
+            route = "Hà Nội - TP.HCM",
+            rating = 4.4f,
+            reviewCount = "25K+",
+            price = 2500000,
+            imageRes = R.drawable.chuyenbay,
+            location = "Hà Nội",
+            type = TransportType.FLIGHT
+        )
+    )
+
+    val privateCarServices = listOf(
+        TransportService(
+            id = "private_1",
+            name = "Thuê Xe Riêng Có Tài Xế",
+            company = "Private Car",
+            route = "Hà Nội",
+            rating = 4.6f,
+            reviewCount = "3K+",
+            price = 1200000,
+            imageRes = R.drawable.thuexerieng,
+            location = "Hà Nội",
+            type = TransportType.PRIVATE_CAR
         )
     )
 
     val transportCategories = listOf(
-        TransportCategory(TransportType.BUS, "Xe buýt", "ic_bus"),
-        TransportCategory(TransportType.TRAIN, "Tàu hỏa", "ic_train"),
-        TransportCategory(TransportType.CAR_RENTAL, "Thuê xe", "ic_car"),
-        TransportCategory(TransportType.AIRPORT_SHUTTLE, "Xe sân bay", "ic_airport"),
-        TransportCategory(TransportType.FLIGHT, "Chuyến bay", "ic_flight"),
-        TransportCategory(TransportType.PRIVATE_CAR, "Thuê xe riêng", "ic_private_car")
+        TransportCategory(
+            type = TransportType.BUS,
+            title = "Xe buýt",
+            icon = "ic_bus",
+            backgroundImage = R.drawable.xebuyt
+        ),
+        TransportCategory(
+            type = TransportType.TRAIN,
+            title = "Tàu hỏa",
+            icon = "ic_train",
+            backgroundImage = R.drawable.tauhoa
+        ),
+        TransportCategory(
+            type = TransportType.CAR_RENTAL,
+            title = "Thuê xe",
+            icon = "ic_car",
+            backgroundImage = R.drawable.thuexe
+        ),
+        TransportCategory(
+            type = TransportType.AIRPORT_SHUTTLE,
+            title = "Xe sân bay",
+            icon = "ic_airport",
+            backgroundImage = R.drawable.xesanbay
+        ),
+        TransportCategory(
+            type = TransportType.FLIGHT,
+            title = "Chuyến bay",
+            icon = "ic_flight",
+            backgroundImage = R.drawable.chuyenbay
+        ),
+        TransportCategory(
+            type = TransportType.PRIVATE_CAR,
+            title = "Thuê xe riêng",
+            icon = "ic_private_car",
+            backgroundImage = R.drawable.thuexerieng
+        )
     )
 }

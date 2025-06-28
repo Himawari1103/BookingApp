@@ -33,7 +33,7 @@ fun CategorySection(navController: NavController) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
-            .padding(top = 16.dp, bottom = 8.dp)
+            .padding(top = 32.dp, bottom = 8.dp)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -45,13 +45,11 @@ fun CategorySection(navController: NavController) {
                     modifier = Modifier.weight(1f),
                     onClick = {
                         when (category.id) {
+                            "entertainment" -> navController.navigate("tourism")
                             "transport" -> navController.navigate("transportation")
                             "hotels" -> navController.navigate("hotel_detail/1")
                             "flight" -> {
                                 // Navigate to flight booking screen when implemented
-                            }
-                            "entertainment" -> {
-                                // Navigate to tourism/entertainment screen when implemented
                             }
                             "all_categories" -> {
                                 // Navigate to all categories screen when implemented
