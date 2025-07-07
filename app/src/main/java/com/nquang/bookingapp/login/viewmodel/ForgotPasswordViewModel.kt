@@ -58,7 +58,7 @@ class ForgotPasswordViewModel: ViewModel() {
                 }
 
                 auth.sendPasswordResetEmail(resetEmail).await()
-                _forgotPasswordState.value = ForgotPasswordState.Success(UserModel(email = resetEmail))
+                _forgotPasswordState.value = ForgotPasswordState.Success(UserModel(email = resetEmail, uid = user.uid))
                 Toast.makeText(context, "Password reset email sent", Toast.LENGTH_SHORT).show()
             } catch (e: Exception) {
                 _forgotPasswordState.value = ForgotPasswordState.Error("Forgot password failed: ${e.message}")

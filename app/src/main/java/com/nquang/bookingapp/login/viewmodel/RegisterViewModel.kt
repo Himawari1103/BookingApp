@@ -40,9 +40,9 @@ class RegisterViewModel : ViewModel() {
     private val _authState = MutableStateFlow<AuthState>(AuthState.Idle)
     val authState: StateFlow<AuthState> = _authState
 
-    init {
-        database.setPersistenceEnabled(false)
-    }
+//    init {
+//        database.setPersistenceEnabled(false)
+//    }
 
     fun updateFullName(fullName: String) {
         this.fullName = fullName.trim()
@@ -67,7 +67,7 @@ class RegisterViewModel : ViewModel() {
             val result = auth.createUserWithEmailAndPassword(email, password).await()
             val firebaseUser = result.user
             if (firebaseUser != null) {
-                val user = UserModel(fullName, email, password)
+                val user = UserModel(fullName = fullName,email = email, uid = firebaseUser.uid)
                 saveUserdata(auth.currentUser!!.uid,user.fullName!!, user.email!!)
                 _authState.value = AuthState.Success(user)
                 true
@@ -84,7 +84,7 @@ class RegisterViewModel : ViewModel() {
 
     private fun saveUserdata(uid: String, fullName: String, email: String) {
         //auth.currentUser!!.uid
-        val user = UserModel(fullName, email)
+        val user = UserModel(fullName = fullName,email = email, uid = uid)
         //chèn dữ liệu vào database
         database.getReference().child("users").child(uid).setValue(user)
             .addOnSuccessListener {

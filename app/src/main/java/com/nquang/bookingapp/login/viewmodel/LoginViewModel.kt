@@ -12,7 +12,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
-import com.nquang.bookingapp.GoogleSignInUtils
+import com.nquang.bookingapp.utils.GoogleSignInUtils
 import com.nquang.bookingapp.model.UserModel
 import com.nquang.bookingapp.utils.FirebaseUtils
 import kotlinx.coroutines.CoroutineScope
@@ -63,7 +63,7 @@ class LoginViewModel : ViewModel() {
                         val firebaseUser = result.user
                         if (firebaseUser != null) {
                             _loginState.value = LoginState.Success(
-                                UserModel(email = firebaseUser.email, password = password)
+                                UserModel(email = firebaseUser.email, password = password, uid = firebaseUser.uid)
                             )
                             login.invoke()
                         } else {

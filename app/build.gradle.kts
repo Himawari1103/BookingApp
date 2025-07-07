@@ -66,4 +66,5 @@ dependencies {
     implementation(libs.navigation.compose)
     implementation(libs.ui.tooling)
     debugImplementation(libs.ui.test.manifest)
+    implementation(libs.androidx.material.icons.extended.android) // Or the latest version
 }

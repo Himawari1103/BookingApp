@@ -11,6 +11,7 @@ constraintlayout = "2.2.1"
 kotlin = "2.2.0"
 coreKtx = "1.16.0"
 material3 = "1.3.2"
+materialIconsExtendedAndroid = "1.7.8"
 navigationCompose = "2.9.1"
 runtime = "1.8.3"
 ui = "1.8.3"
@@ -26,6 +27,7 @@ googleid = "1.1.1"
 [libraries]
 androidx-compose-compiler = { group = "androidx.compose.compiler", name = "compiler", version.ref = "composeCompiler" }
 activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity" }
+androidx-material-icons-extended-android = { module = "androidx.compose.material:material-icons-extended-android", version.ref = "materialIconsExtendedAndroid" }
 foundation = { module = "androidx.compose.foundation:foundation", version.ref = "foundation" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }

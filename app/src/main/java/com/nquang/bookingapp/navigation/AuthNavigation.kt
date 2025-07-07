@@ -1,4 +1,4 @@
-package com.nquang.bookingapp.login.navigation
+package com.nquang.bookingapp.navigation
 
 import android.content.Context
 import androidx.compose.runtime.Composable
@@ -15,34 +15,16 @@ import com.nquang.bookingapp.login.forgotpassword.ResetPasswordScreen
 import com.nquang.bookingapp.login.login.LoginScreen
 import com.nquang.bookingapp.login.register.RegisterScreen
 
-import android.os.Bundle
 import android.widget.Toast
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.nquang.bookingapp.GoogleSignInUtils
+import com.nquang.bookingapp.utils.GoogleSignInUtils
 import com.nquang.bookingapp.login.viewmodel.ForgotPasswordViewModel
 import com.nquang.bookingapp.login.viewmodel.LoginViewModel
 import com.nquang.bookingapp.login.viewmodel.RegisterViewModel
-import com.nquang.bookingapp.model.UserModel
-import com.nquang.bookingapp.utils.FirebaseUtils
 import kotlinx.coroutines.launch
 
 // Define navigation routes
@@ -55,12 +37,13 @@ object AppScreens {
 }
 
 @Composable
-fun AppNavigation(
+fun AuthNavigation(
     navController: NavHostController = rememberNavController(),
     startDestination: String = AppScreens.LOGIN_SCREEN,
     registerViewModel: RegisterViewModel = viewModel(),
     loginViewModel: LoginViewModel = viewModel(),
     forgotPasswordViewModel: ForgotPasswordViewModel = viewModel(),
+    onLoginSuccess: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val context: Context = LocalContext.current
@@ -88,7 +71,7 @@ fun AppNavigation(
                 onLoginClick = {
                     loginViewModel.loginWithEmail(context) {
                         Toast.makeText(context, "Login successful", Toast.LENGTH_SHORT).show()
-                        // TODO: add navigate
+                        onLoginSuccess() // Chuyển sang MainNavHost
                     }
                 },
                 onRegisterClick = {
@@ -100,7 +83,7 @@ fun AppNavigation(
                         context, scope, launcher
                     ) {
                         Toast.makeText(context, "Login successful", Toast.LENGTH_SHORT).show()
-                        // TODO: add navigate
+                        onLoginSuccess() // Chuyển sang MainNavHost
                     }
                 },
                 onForgotPasswordClick = {

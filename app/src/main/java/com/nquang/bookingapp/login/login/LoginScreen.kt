@@ -39,8 +39,8 @@ fun LoginScreen(
     registerViewModel: RegisterViewModel,
     loginViewModel: LoginViewModel,
 ) {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+//    var email by remember { mutableStateOf("") }
+//    var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
     val loginState by loginViewModel.loginState.collectAsState()
@@ -208,7 +208,7 @@ fun LoginScreen(
                         ),
                         shape = RoundedCornerShape(8.dp)
                     ) {
-                        if (authState.isLoading) {
+                        if (loginState.isLoading) {
                             CircularProgressIndicator(
                                 modifier = Modifier.size(24.dp),
                                 color = MaterialTheme.colorScheme.onPrimary

@@ -1,0 +1,37 @@
+//package com.nquang.bookingapp
+//
+//import android.os.Bundle
+//import android.util.Log
+//import androidx.activity.ComponentActivity
+//import androidx.activity.compose.setContent
+//import androidx.activity.enableEdgeToEdge
+//import androidx.compose.foundation.layout.fillMaxSize
+//import androidx.compose.material3.MaterialTheme
+//import androidx.compose.material3.Surface
+//import androidx.compose.ui.Modifier
+//import com.nquang.bookingapp.navigation.AppNavigation
+//import com.nquang.bookingapp.ui.theme.MainAppTheme
+//
+//class MainActivity : ComponentActivity() {
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        enableEdgeToEdge()
+//
+//        // Thêm log để debug
+//        Log.d("MainActivity", "onCreate: Khởi tạo ứng dụng")
+//
+//        setContent {
+//            MainAppTheme {
+//                Surface(
+//                    modifier = Modifier.fillMaxSize(),
+//                    color = MaterialTheme.colorScheme.background
+//                ) {
+//                    // Thêm log để debug
+//                    Log.d("MainActivity", "setContent: Chuẩn bị render AppNavigation")
+//
+//                    AppNavigation()
+//                }
+//            }
+//        }
+//    }
+//}
