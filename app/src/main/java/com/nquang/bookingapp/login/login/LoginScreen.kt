@@ -1,4 +1,4 @@
-package com.example.login.screens
+package com.nquang.bookingapp.login.login
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -10,6 +10,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,19 +25,26 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.login.R
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.nquang.bookingapp.R
+import com.nquang.bookingapp.login.viewmodel.LoginViewModel
+import com.nquang.bookingapp.login.viewmodel.RegisterViewModel
 
 @Composable
 fun LoginScreen(
     onLoginClick: () -> Unit = {},
     onRegisterClick: () -> Unit = {},
     onGoogleSignInClick: () -> Unit = {},
-    onForgotPasswordClick: () -> Unit = {}
+    onForgotPasswordClick: () -> Unit = {},
+    registerViewModel: RegisterViewModel,
+    loginViewModel: LoginViewModel,
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
+    val loginState by loginViewModel.loginState.collectAsState()
+    val authState by registerViewModel.authState.collectAsState()
 
     Box(
         modifier = Modifier
@@ -82,7 +90,7 @@ fun LoginScreen(
             )
 
             Text(
-                text = "Welcome to MyKingDom Giangmichy",
+                text = "Welcome to MyKingDom",
                 fontSize = 14.sp,
                 color = Color.Gray,
                 textAlign = TextAlign.Center,
@@ -116,8 +124,8 @@ fun LoginScreen(
                             modifier = Modifier.padding(bottom = 8.dp)
                         )
                         OutlinedTextField(
-                            value = email,
-                            onValueChange = { email = it },
+                            value = loginViewModel.email,
+                            onValueChange = loginViewModel::updateEmail,
                             placeholder = { Text("Enter your email") },
                             modifier = Modifier.fillMaxWidth(),
                             colors = OutlinedTextFieldDefaults.colors(
@@ -141,8 +149,8 @@ fun LoginScreen(
                             modifier = Modifier.padding(bottom = 8.dp)
                         )
                         OutlinedTextField(
-                            value = password,
-                            onValueChange = { password = it },
+                            value = loginViewModel.password,
+                            onValueChange = loginViewModel::updatePassword,
                             placeholder = { Text("Enter your password") },
                             visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -200,12 +208,19 @@ fun LoginScreen(
                         ),
                         shape = RoundedCornerShape(8.dp)
                     ) {
-                        Text(
-                            text = "LOGIN",
-                            color = Color.White,
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold
-                        )
+                        if (authState.isLoading) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(24.dp),
+                                color = MaterialTheme.colorScheme.onPrimary
+                            )
+                        } else {
+                            Text(
+                                text = "LOGIN",
+                                color = Color.White,
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
                     }
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -238,20 +253,20 @@ fun LoginScreen(
                             .padding(vertical = 12.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Divider(
+                        HorizontalDivider(
                             modifier = Modifier.weight(1f),
-                            color = Color.LightGray,
-                            thickness = 1.dp
+                            thickness = 1.dp,
+                            color = Color.LightGray
                         )
                         Text(
                             text = "  or  ",
                             color = Color.Gray,
                             fontSize = 14.sp
                         )
-                        Divider(
+                        HorizontalDivider(
                             modifier = Modifier.weight(1f),
-                            color = Color.LightGray,
-                            thickness = 1.dp
+                            thickness = 1.dp,
+                            color = Color.LightGray
                         )
                     }
 

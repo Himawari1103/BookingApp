@@ -1,21 +1,20 @@
-package com.example.login.screens
+package com.nquang.bookingapp.login.register
 
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -24,13 +23,15 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.login.R
+import com.nquang.bookingapp.R
+import com.nquang.bookingapp.login.viewmodel.RegisterViewModel
 
 @Composable
 fun RegisterScreen(
     onRegisterClick: () -> Unit = {},
     onBackToLoginClick: () -> Unit = {},
-    onGoogleSignInClick: () -> Unit = {}
+    onGoogleSignInClick: () -> Unit = {},
+    registerViewModel: RegisterViewModel
 ) {
     var fullName by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
@@ -39,6 +40,7 @@ fun RegisterScreen(
     var passwordVisible by remember { mutableStateOf(false) }
     var confirmPasswordVisible by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
+    val authState by registerViewModel.authState.collectAsState()
 
     Box(
         modifier = Modifier
@@ -118,8 +120,8 @@ fun RegisterScreen(
                             modifier = Modifier.padding(bottom = 8.dp)
                         )
                         OutlinedTextField(
-                            value = fullName,
-                            onValueChange = { fullName = it },
+                            value = registerViewModel.fullName,
+                            onValueChange = registerViewModel::updateFullName,
                             placeholder = { Text("Enter your full name") },
                             modifier = Modifier.fillMaxWidth(),
                             colors = OutlinedTextFieldDefaults.colors(
@@ -143,8 +145,8 @@ fun RegisterScreen(
                             modifier = Modifier.padding(bottom = 8.dp)
                         )
                         OutlinedTextField(
-                            value = email,
-                            onValueChange = { email = it },
+                            value = registerViewModel.email,
+                            onValueChange = registerViewModel::updateEmail,
                             placeholder = { Text("Enter your email") },
                             modifier = Modifier.fillMaxWidth(),
                             colors = OutlinedTextFieldDefaults.colors(
@@ -168,8 +170,8 @@ fun RegisterScreen(
                             modifier = Modifier.padding(bottom = 8.dp)
                         )
                         OutlinedTextField(
-                            value = password,
-                            onValueChange = { password = it },
+                            value = registerViewModel.password,
+                            onValueChange = registerViewModel::updatePassword,
                             placeholder = { Text("Enter your password") },
                             visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -206,8 +208,8 @@ fun RegisterScreen(
                             modifier = Modifier.padding(bottom = 8.dp)
                         )
                         OutlinedTextField(
-                            value = confirmPassword,
-                            onValueChange = { confirmPassword = it },
+                            value = registerViewModel.confirmPassword,
+                            onValueChange = registerViewModel::updateConfirmPassword,
                             placeholder = { Text("Confirm your password") },
                             visualTransformation = if (confirmPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -219,7 +221,9 @@ fun RegisterScreen(
                             shape = RoundedCornerShape(8.dp),
                             singleLine = true,
                             trailingIcon = {
-                                IconButton(onClick = { confirmPasswordVisible = !confirmPasswordVisible }) {
+                                IconButton(onClick = {
+                                    confirmPasswordVisible = !confirmPasswordVisible
+                                }) {
                                     Image(
                                         painter = painterResource(
                                             id = if (confirmPasswordVisible) R.drawable.eye2 else R.drawable.hide
@@ -236,21 +240,32 @@ fun RegisterScreen(
 
                     // REGISTER button
                     Button(
-                        onClick = onRegisterClick,
+                        onClick = {
+                            onRegisterClick()
+                        },
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(52.dp),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color(0xFF2684FF)
                         ),
-                        shape = RoundedCornerShape(8.dp)
+                        shape = RoundedCornerShape(8.dp),
+                        enabled = !authState.isLoading
                     ) {
-                        Text(
-                            text = "REGISTER",
-                            color = Color.White,
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold
-                        )
+                        if (authState.isLoading) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(24.dp),
+                                color = MaterialTheme.colorScheme.onPrimary
+                            )
+                        } else {
+                            Text(
+                                text = "REGISTER",
+                                color = Color.White,
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+
                     }
 
                     Spacer(modifier = Modifier.height(4.dp))
@@ -274,20 +289,20 @@ fun RegisterScreen(
                             .padding(vertical = 4.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Divider(
+                        HorizontalDivider(
                             modifier = Modifier.weight(1f),
-                            color = Color.LightGray,
-                            thickness = 1.dp
+                            thickness = 1.dp,
+                            color = Color.LightGray
                         )
                         Text(
                             text = "  or  ",
                             color = Color.Gray,
                             fontSize = 14.sp
                         )
-                        Divider(
+                        HorizontalDivider(
                             modifier = Modifier.weight(1f),
-                            color = Color.LightGray,
-                            thickness = 1.dp
+                            thickness = 1.dp,
+                            color = Color.LightGray
                         )
                     }
 
@@ -317,7 +332,7 @@ fun RegisterScreen(
                             )
                             Spacer(modifier = Modifier.width(12.dp))
                             Text(
-                                text = "Sign up with Google",
+                                text = "Sign in with Google",
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.Medium
                             )

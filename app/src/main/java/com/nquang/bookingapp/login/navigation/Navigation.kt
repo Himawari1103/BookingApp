@@ -1,8 +1,7 @@
-package com.example.login.navigation
+package com.nquang.bookingapp.login.navigation
 
+import android.content.Context
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -10,7 +9,41 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.login.screens.*
+import com.nquang.bookingapp.login.forgotpassword.ForgotPasswordEmailScreen
+import com.nquang.bookingapp.login.forgotpassword.OtpVerificationScreen
+import com.nquang.bookingapp.login.forgotpassword.ResetPasswordScreen
+import com.nquang.bookingapp.login.login.LoginScreen
+import com.nquang.bookingapp.login.register.RegisterScreen
+
+import android.os.Bundle
+import android.widget.Toast
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.nquang.bookingapp.GoogleSignInUtils
+import com.nquang.bookingapp.login.viewmodel.ForgotPasswordViewModel
+import com.nquang.bookingapp.login.viewmodel.LoginViewModel
+import com.nquang.bookingapp.login.viewmodel.RegisterViewModel
+import com.nquang.bookingapp.model.UserModel
+import com.nquang.bookingapp.utils.FirebaseUtils
+import kotlinx.coroutines.launch
 
 // Define navigation routes
 object AppScreens {
@@ -25,8 +58,26 @@ object AppScreens {
 fun AppNavigation(
     navController: NavHostController = rememberNavController(),
     startDestination: String = AppScreens.LOGIN_SCREEN,
+    registerViewModel: RegisterViewModel = viewModel(),
+    loginViewModel: LoginViewModel = viewModel(),
+    forgotPasswordViewModel: ForgotPasswordViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
+    val context: Context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val launcher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) {
+            GoogleSignInUtils.doGoogleSignIn(
+                context = context,
+                scope = scope,
+                launcher = null,
+                login = {
+                    Toast.makeText(context, "Login successful", Toast.LENGTH_SHORT).show()
+                }
+            )
+
+        }
+
     NavHost(
         navController = navController,
         startDestination = startDestination,
@@ -35,21 +86,29 @@ fun AppNavigation(
         composable(AppScreens.LOGIN_SCREEN) {
             LoginScreen(
                 onLoginClick = {
-                    // Handle login logic here
-                    println("Login button clicked")
+                    loginViewModel.loginWithEmail(context) {
+                        Toast.makeText(context, "Login successful", Toast.LENGTH_SHORT).show()
+                        // TODO: add navigate
+                    }
                 },
                 onRegisterClick = {
                     // Navigate to register screen
                     navController.navigate(AppScreens.REGISTER_SCREEN)
                 },
                 onGoogleSignInClick = {
-                    // Handle Google sign-in
-                    println("Google sign-in clicked")
+                    loginViewModel.loginWithGoogle(
+                        context, scope, launcher
+                    ) {
+                        Toast.makeText(context, "Login successful", Toast.LENGTH_SHORT).show()
+                        // TODO: add navigate
+                    }
                 },
                 onForgotPasswordClick = {
                     // Navigate to forgot password screen
                     navController.navigate(AppScreens.FORGOT_PASSWORD_EMAIL_SCREEN)
-                }
+                },
+                registerViewModel = registerViewModel,
+                loginViewModel = loginViewModel
             )
         }
 
@@ -58,33 +117,87 @@ fun AppNavigation(
                 onRegisterClick = {
                     // Handle registration logic
                     println("Register button clicked")
-                    // After successful registration, navigate back to login
-                    navController.navigate(AppScreens.LOGIN_SCREEN) {
-                        // Clear the back stack so user can't go back to register screen
-                        popUpTo(AppScreens.LOGIN_SCREEN) { inclusive = true }
+
+                    if (registerViewModel.fullName.isEmpty() || registerViewModel.email.isEmpty() || registerViewModel.password.isEmpty() || registerViewModel.confirmPassword.isEmpty()) {
+                        Toast.makeText(
+                            context,
+                            "Please fill all fields",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        return@RegisterScreen
                     }
+                    if (registerViewModel.password != registerViewModel.confirmPassword) {
+                        Toast.makeText(
+                            context,
+                            "Password and confirm password do not match",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        return@RegisterScreen
+                    }
+                    if (registerViewModel.password.length < 6) {
+                        Toast.makeText(
+                            context,
+                            "Password must be at least 6 characters",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        return@RegisterScreen
+                    }
+
+                    scope.launch {
+                        val statusReg: Boolean = registerViewModel.register()
+
+                        if (statusReg) {
+                            Toast.makeText(
+                                context,
+                                "Registration successful: " + registerViewModel.authState.value.userEmail,
+                                Toast.LENGTH_SHORT
+                            )
+                                .show()
+                            // After successful registration, navigate back to login
+                            loginViewModel.email = registerViewModel.email
+                            navController.navigate(AppScreens.LOGIN_SCREEN) {
+                                // Clear the back stack so user can't go back to register screen
+                                popUpTo(AppScreens.LOGIN_SCREEN) { inclusive = true }
+                            }
+                        } else {
+                            Toast.makeText(
+                                context,
+                                registerViewModel.authState.value.errorMessage,
+                                Toast.LENGTH_SHORT
+                            )
+                                .show()
+                        }
+                    }
+
                 },
                 onBackToLoginClick = {
                     // Navigate back to login screen
                     navController.navigateUp()
                 },
                 onGoogleSignInClick = {
-                    // Handle Google sign-up
-                    println("Google sign-up clicked")
-                }
+                    GoogleSignInUtils.doGoogleSignIn(
+                        context = context,
+                        scope = scope,
+                        launcher = launcher,
+                        login = {
+                            Toast.makeText(context, "Login successful", Toast.LENGTH_SHORT).show()
+                        }
+                    )
+                },
+                registerViewModel = registerViewModel
             )
         }
 
         composable(AppScreens.FORGOT_PASSWORD_EMAIL_SCREEN) {
             ForgotPasswordEmailScreen(
-                onSendClick = { email ->
-                    // Navigate to OTP verification screen with email
-                    navController.navigate("otp_verification_screen/$email")
+                onSendClick = {
+                    forgotPasswordViewModel.forgotPassword(context)
                 },
                 onBackClick = {
                     // Navigate back to login screen
                     navController.navigateUp()
-                }
+                },
+                forgotPasswordViewModel = forgotPasswordViewModel
             )
         }
 

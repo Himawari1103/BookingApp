@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "946159134158",
+    "firebase_url": "https://bookingapp-7dd28-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "bookingapp-7dd28",
+    "storage_bucket": "bookingapp-7dd28.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:946159134158:android:63f4aa821915de8dc4379f",
+        "android_client_info": {
+          "package_name": "com.nquang.bookingapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "946159134158-t8e1ct9tpre8s72vr6jtgk8344s3erte.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "946159134158-fhbr1aa1mneevl9ql6mqos6g1krsmi45.apps.googleusercontent.com",
+          "client_type": 1
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCJpQzmS2onQZqUgC3D_9X6aSVpJQNbN-4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "946159134158-t8e1ct9tpre8s72vr6jtgk8344s3erte.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "946159134158-fhbr1aa1mneevl9ql6mqos6g1krsmi45.apps.googleusercontent.com",
+              "client_type": 1
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

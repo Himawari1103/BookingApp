@@ -1,4 +1,4 @@
-package com.example.login.screens
+package com.nquang.bookingapp.login.forgotpassword
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -22,15 +22,20 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.login.R
+import com.nquang.bookingapp.R
+import com.nquang.bookingapp.login.viewmodel.ForgotPasswordState
+import com.nquang.bookingapp.login.viewmodel.ForgotPasswordViewModel
 
 @Composable
 fun ForgotPasswordEmailScreen(
-    onSendClick: (String) -> Unit = {},
-    onBackClick: () -> Unit = {}
+    onSendClick: () -> Unit = {},
+    onBackClick: () -> Unit = {},
+    forgotPasswordViewModel: ForgotPasswordViewModel
 ) {
     var email by remember { mutableStateOf("") }
     val scrollState = rememberScrollState()
+
+    val forgotPasswordState by forgotPasswordViewModel.forgotPasswordState.collectAsState()
 
     Box(
         modifier = Modifier
@@ -110,8 +115,8 @@ fun ForgotPasswordEmailScreen(
                             modifier = Modifier.padding(bottom = 8.dp)
                         )
                         OutlinedTextField(
-                            value = email,
-                            onValueChange = { email = it },
+                            value = forgotPasswordViewModel.resetEmail,
+                            onValueChange = forgotPasswordViewModel::updateResetEmail,
                             placeholder = { Text("Enter your email") },
                             modifier = Modifier.fillMaxWidth(),
                             colors = OutlinedTextFieldDefaults.colors(
@@ -128,7 +133,7 @@ fun ForgotPasswordEmailScreen(
 
                     // SEND button
                     Button(
-                        onClick = { onSendClick(email) },
+                        onClick = onSendClick,
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(52.dp),
@@ -137,12 +142,27 @@ fun ForgotPasswordEmailScreen(
                         ),
                         shape = RoundedCornerShape(8.dp)
                     ) {
-                        Text(
-                            text = "SEND",
-                            color = Color.White,
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold
-                        )
+                        if (forgotPasswordState.isLoading) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(24.dp),
+                                color = MaterialTheme.colorScheme.onPrimary
+                            )
+                        } else if (forgotPasswordState is ForgotPasswordState.Success || forgotPasswordState is ForgotPasswordState.Error) {
+                            Text(
+                                text = "SEND",
+                                color = Color.White,
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        } else {
+                            Text(
+                                text = "SEND",
+                                color = Color.White,
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+
                     }
 
                     Spacer(modifier = Modifier.height(16.dp))

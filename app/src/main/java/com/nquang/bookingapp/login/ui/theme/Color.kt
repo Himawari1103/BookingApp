@@ -1,4 +1,4 @@
-package com.example.login.ui.theme
+package com.nquang.bookingapp.login.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
