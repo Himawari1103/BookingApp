@@ -17,6 +17,7 @@ import com.example.mainapp.screens.bookings.BookingsScreen
 import com.example.mainapp.screens.home.HomeScreen
 import com.example.mainapp.screens.home.components.BottomNavigationComponent
 import com.example.mainapp.screens.hoteldetail.HotelDetailScreen
+import com.example.mainapp.screens.hotellist.HotelListScreen
 import com.example.mainapp.screens.payment.PaymentScreen
 import com.example.mainapp.screens.payment.PaymentMethodScreen
 import com.example.mainapp.screens.reviews.ReviewsScreen
@@ -50,6 +51,11 @@ fun AppNavigation() {
 
         composable("account") {
             AccountScreen(navController = navController)
+        }
+
+        // Màn hình danh sách khách sạn
+        composable("hotel_list") {
+            HotelListScreen(navController = navController)
         }
 
         // Màn hình chi tiết khách sạn
