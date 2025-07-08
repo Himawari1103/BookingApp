@@ -51,6 +51,7 @@ fun MainNavigation(
     val currentRoute = navBackStackEntry?.destination?.route
     val context: Context = LocalContext.current
     val scope = rememberCoroutineScope()
+    accountViewModel.userModel.value = userViewModel.userModel.value
 
     NavHost(
         navController = navController,
@@ -163,7 +164,8 @@ fun MainNavigation(
             ProfileScreen(
                 onBackClick = {
                     navController.popBackStack()
-                }
+                },
+                userViewModel = userViewModel
             )
         }
 

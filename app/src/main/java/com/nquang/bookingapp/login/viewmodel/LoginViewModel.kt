@@ -2,6 +2,7 @@ package com.nquang.bookingapp.login.viewmodel
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.result.ActivityResult
@@ -63,17 +64,29 @@ class LoginViewModel : ViewModel() {
                         val firebaseUser = result.user
                         if (firebaseUser != null) {
                             _loginState.value = LoginState.Success(
-                                UserModel(email = firebaseUser.email, password = password, uid = firebaseUser.uid)
+                                UserModel(
+                                    email = firebaseUser.email,
+                                    password = password,
+                                    uid = firebaseUser.uid
+                                )
                             )
                             login.invoke()
                         } else {
                             _loginState.value = LoginState.Error("Login failed: No user found")
-                            Toast.makeText(context, "Login failed: No user found", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                context,
+                                "Login failed: No user found",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     }
                     .addOnFailureListener { exception ->
                         _loginState.value = LoginState.Error("Login failed: ${exception.message}")
-                        Toast.makeText(context, "Login failed: ${exception.message}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            context,
+                            "Login failed: ${exception.message}",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
             } catch (e: Exception) {
                 _loginState.value = LoginState.Error("Login failed: ${e.message}")
@@ -91,18 +104,50 @@ class LoginViewModel : ViewModel() {
     ) {
         viewModelScope.launch {
             _loginState.value = LoginState.Loading
+//            val user = FirebaseAuth.getInstance().currentUser!!
+//            val firebaseUser =
+//                FirebaseUtils.findUserByEmail(user.email!!)
+
             try {
                 GoogleSignInUtils.doGoogleSignIn(
                     context = context,
                     scope = scope,
                     launcher = launcher,
-                    login = login
+                    login = login,
+//                    firebaseUser = firebaseUser
                 )
+
             } catch (e: Exception) {
                 _loginState.value = LoginState.Error("Google login failed: ${e.message}")
-                Toast.makeText(context, "Google login failed: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Google login failed: ${e.message}", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
     }
+
+//    fun updateNewUserWithGoogleSignIn(
+//        context: Context,
+//    ) {
+//        viewModelScope.launch {
+//            try {
+//                val user = FirebaseAuth.getInstance().currentUser!!
+//                val firebaseUser =
+//                    FirebaseUtils.findUserByEmail(user.email!!)
+//                if (firebaseUser == null) {
+//                    Log.d("GoogleSignInUtils", "fail")
+//                    val userModel = UserModel(
+//                        fullName = user.displayName,
+//                        email = user.email,
+//                        uid = user.uid
+//                    )
+//                    FirebaseUtils.saveUserdata(userModel)
+//                }
+//            } catch (e: Exception) {
+//                _loginState.value = LoginState.Error("Google login failed: ${e.message}")
+//                Toast.makeText(context, "Google login failed: ${e.message}", Toast.LENGTH_SHORT)
+//                    .show()
+//            }
+//        }
+//    }
 
 }

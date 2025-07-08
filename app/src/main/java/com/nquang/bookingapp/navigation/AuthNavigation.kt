@@ -1,6 +1,7 @@
 package com.nquang.bookingapp.navigation
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -21,10 +22,16 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.google.android.gms.tasks.Task
+import com.google.android.gms.tasks.Tasks
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.nquang.bookingapp.utils.GoogleSignInUtils
 import com.nquang.bookingapp.login.viewmodel.ForgotPasswordViewModel
 import com.nquang.bookingapp.login.viewmodel.LoginViewModel
 import com.nquang.bookingapp.login.viewmodel.RegisterViewModel
+import com.nquang.bookingapp.model.UserModel
+import com.nquang.bookingapp.utils.FirebaseUtils
 import kotlinx.coroutines.launch
 
 // Define navigation routes
@@ -158,14 +165,12 @@ fun AuthNavigation(
                     navController.navigateUp()
                 },
                 onGoogleSignInClick = {
-                    GoogleSignInUtils.doGoogleSignIn(
-                        context = context,
-                        scope = scope,
-                        launcher = launcher,
-                        login = {
-                            Toast.makeText(context, "Login successful", Toast.LENGTH_SHORT).show()
-                        }
-                    )
+                    loginViewModel.loginWithGoogle(
+                        context, scope, launcher
+                    ) {
+                        Toast.makeText(context, "Login successful", Toast.LENGTH_SHORT).show()
+                        onLoginSuccess() // Chuyển sang MainNavHost
+                    }
                 },
                 registerViewModel = registerViewModel
             )

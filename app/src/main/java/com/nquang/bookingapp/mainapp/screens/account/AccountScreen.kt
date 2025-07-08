@@ -1,5 +1,6 @@
 package com.nquang.bookingapp.mainapp.screens.account
 
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -22,7 +23,12 @@ fun AccountScreen(
     onLogout: () -> Unit
 ) {
 //    val user = AccountRepository.getCurrentUser()
-    val user = userViewModel.userModel.value
+    val userModel = userViewModel.userModel.value
+    if(userModel == null){
+        Log.d("AccountScreen", "User model is null")
+        return
+    }
+
     val myPageItems = AccountRepository.getMyPageMenuItems()
     val settingsItems = AccountRepository.getSettingsMenuItems()
     val infoItems = AccountRepository.getInfoMenuItems()
@@ -40,7 +46,7 @@ fun AccountScreen(
 
             // Header with user info
             AccountHeader(
-                user = user!!,
+                userModel = userModel,
                 onEditClick = {
                     navController.navigate("profile")
                 },

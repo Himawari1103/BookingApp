@@ -1,5 +1,6 @@
 package com.nquang.bookingapp.mainapp.screens.profile.components
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -19,20 +20,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.nquang.bookingapp.mainapp.data.model.account.User
+import com.nquang.bookingapp.viewmodel.UserViewModel
 import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileForm(
-    user: User,
-    onUserUpdate: (User) -> Unit,
-    onImageEdit: () -> Unit
+    onImageEdit: () -> Unit,
+    userViewModel: UserViewModel
 ) {
-    var nickname by remember { mutableStateOf(user.nickname ?: "") }
-    var phone by remember { mutableStateOf(user.phone) }
-    var email by remember { mutableStateOf(user.email) }
-    var gender by remember { mutableStateOf(user.gender ?: "") }
-    var birthDate by remember { mutableStateOf(user.birthDate ?: "") }
+    val userModel = userViewModel.userModel.value
+    if(userModel == null){
+        Log.d("AccountScreen", "User model is null")
+        return
+    }
 
     Column(
         modifier = Modifier
@@ -52,7 +53,7 @@ fun ProfileForm(
                     .background(Color(0xFFFF6B35)),
                 contentAlignment = Alignment.Center
             ) {
-                if (user.avatarUrl != null) {
+                if (userModel.avatarUrl != null) {
                     // Hiển thị ảnh đại diện nếu có
                     Icon(
                         Icons.Default.Person,
@@ -61,10 +62,10 @@ fun ProfileForm(
                         modifier = Modifier.size(40.dp)
                     )
                 } else {
-                    val displayText = if (nickname.isNotEmpty()) {
-                        nickname.first().toString().uppercase(Locale.getDefault())
+                    val displayText = if (userModel.nickname != null) {
+                        userModel.nickname.first().toString().uppercase(Locale.getDefault())
                     } else {
-                        user.name.first().toString().uppercase(Locale.getDefault())
+                        userModel.fullName?.first().toString().uppercase(Locale.getDefault())
                     }
                     Text(
                         text = displayText,
@@ -97,58 +98,49 @@ fun ProfileForm(
         // Form fields
         ProfileTextField(
             label = "Nickname",
-            value = nickname,
-            onValueChange = {
-                nickname = it
-                onUserUpdate(user.copy(nickname = it))
-            }
+            value = userViewModel.userModel.value?.nickname ?: "",
+            onValueChange = userViewModel::updateNickName
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
         // Phone number with flag
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "Số điện thoại",
-                fontSize = 14.sp,
-                color = Color.Gray,
-                modifier = Modifier.width(100.dp)
-            )
+//        Row(
+//            verticalAlignment = Alignment.CenterVertically
+//        ) {
+//            Text(
+//                text = "Số điện thoại",
+//                fontSize = 14.sp,
+//                color = Color.Gray,
+//                modifier = Modifier.width(100.dp)
+//            )
 
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.weight(1f)
-            ) {
-                // Vietnam flag
-                Box(
-                    modifier = Modifier
-                        .size(24.dp, 16.dp)
-                        .background(Color.Red, RoundedCornerShape(2.dp))
-                ) {
-                    // Simplified flag representation
-                }
+//            Row(
+//                verticalAlignment = Alignment.CenterVertically,
+//                modifier = Modifier.weight(1f)
+//            ) {
+//                // Vietnam flag
+//                Box(
+//                    modifier = Modifier
+//                        .size(24.dp, 16.dp)
+//                        .background(Color.Red, RoundedCornerShape(2.dp))
+//                ) {
+//                    // Simplified flag representation
+//                }
+//
+//                Spacer(modifier = Modifier.width(8.dp))
 
-                Spacer(modifier = Modifier.width(8.dp))
-
-                Text(
-                    text = phone,
-                    fontSize = 16.sp,
-                    color = Color.Black
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
+//                Text(
+//                    text = phone,
+//                    fontSize = 16.sp,
+//                    color = Color.Black
+//                )
+//            }
+//        }
         ProfileTextField(
-            label = "Email",
-            value = email,
-            onValueChange = {
-                email = it
-                onUserUpdate(user.copy(email = it))
-            }
+            label = "Số điện thoại",
+            value = userModel.phoneNumber ?: "",
+            onValueChange = userViewModel::updatePhoneNumber
         )
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -164,56 +156,56 @@ fun ProfileForm(
 
         ProfileTextField(
             label = "Giới tính",
-            value = gender,
-            onValueChange = {
-                gender = it
-                onUserUpdate(user.copy(gender = it))
-            }
+            value = userModel.gender ?: "",
+            onValueChange = userViewModel::updateGender
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
         ProfileTextField(
             label = "Ngày sinh",
-            value = birthDate,
-            onValueChange = {
-                birthDate = it
-                onUserUpdate(user.copy(birthDate = it))
-            }
+            value = userModel.birthDate ?: "",
+            onValueChange = userViewModel::updateBirthDate
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        ProfileTextField(
+            label = "Địa chỉ",
+            value = userModel.address ?: "",
+            onValueChange = userViewModel::updateAddress
+        )
+
         // Referral code with QR
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "Mã mời",
-                fontSize = 14.sp,
-                color = Color.Gray,
-                modifier = Modifier.width(100.dp)
-            )
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.weight(1f)
-            ) {
-                Text(
-                    text = user.referralCode ?: "",
-                    fontSize = 16.sp,
-                    color = Color.Black,
-                    modifier = Modifier.weight(1f)
-                )
-
-                Icon(
-                    Icons.Default.QrCode,
-                    contentDescription = "QR Code",
-                    tint = Color.Gray,
-                    modifier = Modifier.size(24.dp)
-                )
-            }
-        }
+//        Row(
+//            verticalAlignment = Alignment.CenterVertically
+//        ) {
+//            Text(
+//                text = "Mã mời",
+//                fontSize = 14.sp,
+//                color = Color.Gray,
+//                modifier = Modifier.width(100.dp)
+//            )
+//
+//            Row(
+//                verticalAlignment = Alignment.CenterVertically,
+//                modifier = Modifier.weight(1f)
+//            ) {
+//                Text(
+//                    text = user.referralCode ?: "",
+//                    fontSize = 16.sp,
+//                    color = Color.Black,
+//                    modifier = Modifier.weight(1f)
+//                )
+//
+//                Icon(
+//                    Icons.Default.QrCode,
+//                    contentDescription = "QR Code",
+//                    tint = Color.Gray,
+//                    modifier = Modifier.size(24.dp)
+//                )
+//            }
+//        }
     }
 }
 

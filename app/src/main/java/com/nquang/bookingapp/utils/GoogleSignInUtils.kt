@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.provider.Settings
+import android.util.Log
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.result.ActivityResult
 import androidx.credentials.ClearCredentialStateRequest
@@ -23,6 +24,7 @@ import com.nquang.bookingapp.MainActivity
 import com.nquang.bookingapp.R
 import com.nquang.bookingapp.model.UserModel
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlin.coroutines.CoroutineContext
@@ -58,18 +60,16 @@ class GoogleSignInUtils {
                                     if (it.isAnonymous.not()) {
                                         login.invoke()
                                         val firebaseUser =
-                                            FirebaseUtils.findUserByEmail(user.email!!)
+                                            scope.async { FirebaseUtils.findUserByEmail(user.email!!) }
+                                                .await()
                                         if (firebaseUser == null) {
+                                            Log.d("doGoogleSignIn", "fail")
                                             val userModel = UserModel(
                                                 fullName = user.displayName,
                                                 email = user.email,
                                                 uid = user.uid
                                             )
-                                            FirebaseUtils.saveUserdata(
-                                                user.uid,
-                                                userModel.fullName!!,
-                                                userModel.email!!
-                                            )
+                                            FirebaseUtils.saveUserdata(userModel)
                                         }
                                     }
                                 }

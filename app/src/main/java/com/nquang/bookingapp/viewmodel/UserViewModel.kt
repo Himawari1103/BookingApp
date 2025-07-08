@@ -24,8 +24,7 @@ class UserViewModel : ViewModel() {
                 val currentUser = FirebaseAuth.getInstance().currentUser
                 user.value = currentUser
                 if(currentUser != null){
-                    userModel.value = FirebaseUtils.findUserByEmail(user.value!!.email!!)
-                    //todo: find user by uid
+                    userModel.value = FirebaseUtils.findUserByUid(user.value!!.uid)
                 } else {
                     Log.d("UserViewModel", "User is null")
                 }
@@ -38,5 +37,33 @@ class UserViewModel : ViewModel() {
 
     fun refreshUserData() {
         fetchUserData()
+    }
+
+    fun updateNickName(nickname: String) {
+        userModel.value = userModel.value?.copy(nickname = nickname)
+    }
+
+    fun updatePhoneNumber(phoneNumber: String) {
+        userModel.value = userModel.value?.copy(phoneNumber = phoneNumber)
+    }
+
+    fun updateEmail(email: String) {
+        userModel.value = userModel.value?.copy(email = email)
+    }
+
+    fun updateGender(gender: String) {
+        userModel.value = userModel.value?.copy(gender = gender)
+    }
+
+    fun updateBirthDate(birthDate: String) {
+        userModel.value = userModel.value?.copy(birthDate = birthDate)
+    }
+
+    fun updateAvatarUrl(avatarUrl: String) {
+        userModel.value = userModel.value?.copy(avatarUrl = avatarUrl)
+    }
+
+    fun updateAddress(address: String) {
+        userModel.value = userModel.value?.copy(address = address)
     }
 }

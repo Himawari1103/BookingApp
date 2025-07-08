@@ -23,7 +23,7 @@ import com.nquang.bookingapp.model.UserModel
 
 @Composable
 fun AccountHeader(
-    user: UserModel,
+    userModel: UserModel,
     onEditClick: () -> Unit,
     onSettingsClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -38,6 +38,22 @@ fun AccountHeader(
         Column(
             modifier = Modifier.padding(16.dp)
         ) {
+            // Settings icon
+            IconButton(
+                onClick = onSettingsClick,
+                modifier = Modifier
+                    .size(32.dp)
+                    .align(Alignment.End)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Settings,
+                    contentDescription = "Cài đặt",
+                    tint = Color(0xFFFF6B35),
+                    modifier = Modifier.size(20.dp)
+                )
+            }
+
+
             // Top row with settings icon
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -73,7 +89,7 @@ fun AccountHeader(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = user.fullName ?: "unknown",
+                                text = userModel.fullName ?: "không có",
                                 fontSize = 20.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = Color.Black
@@ -96,26 +112,13 @@ fun AccountHeader(
                         }
                     }
                 }
-
-                // Settings icon
-                IconButton(
-                    onClick = onSettingsClick,
-                    modifier = Modifier.size(32.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Settings,
-                        contentDescription = "Cài đặt",
-                        tint = Color(0xFFFF6B35),
-                        modifier = Modifier.size(20.dp)
-                    )
-                }
             }
 
             Spacer(modifier = Modifier.height(12.dp))
 
             // Contact info
             Text(
-                text = user.phone ?: "unknown",
+                text = "Số điện thoại: ${userModel.phoneNumber ?: "không có"}",
                 fontSize = 14.sp,
                 color = Color.Gray
             )
@@ -123,7 +126,7 @@ fun AccountHeader(
             Spacer(modifier = Modifier.height(4.dp))
 
             Text(
-                text = user.email ?: "unknown",
+                text = "Email: ${userModel.email ?: "không có"}",
                 fontSize = 14.sp,
                 color = Color.Gray
             )

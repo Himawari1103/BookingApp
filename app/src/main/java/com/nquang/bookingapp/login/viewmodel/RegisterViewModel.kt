@@ -10,6 +10,7 @@ import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.nquang.bookingapp.model.UserModel
+import com.nquang.bookingapp.utils.FirebaseUtils
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.tasks.await
@@ -68,7 +69,8 @@ class RegisterViewModel : ViewModel() {
             val firebaseUser = result.user
             if (firebaseUser != null) {
                 val user = UserModel(fullName = fullName,email = email, uid = firebaseUser.uid)
-                saveUserdata(auth.currentUser!!.uid,user.fullName!!, user.email!!)
+                FirebaseUtils.saveUserdata(user)
+//                saveUserdata(auth.currentUser!!.uid,user.fullName!!, user.email!!)
                 _authState.value = AuthState.Success(user)
                 true
             } else {
@@ -82,16 +84,16 @@ class RegisterViewModel : ViewModel() {
         }
     }
 
-    private fun saveUserdata(uid: String, fullName: String, email: String) {
-        //auth.currentUser!!.uid
-        val user = UserModel(fullName = fullName,email = email, uid = uid)
-        //chèn dữ liệu vào database
-        database.getReference().child("users").child(uid).setValue(user)
-            .addOnSuccessListener {
-                Log.d("saveUserdata", "Success")
-            }
-            .addOnFailureListener { exception ->
-                Log.d("saveUserdata", "Failure", exception)
-            }
-    }
+//    private fun saveUserdata(uid: String, fullName: String, email: String) {
+//        //auth.currentUser!!.uid
+//        val user = UserModel(fullName = fullName,email = email, uid = uid)
+//        //chèn dữ liệu vào database
+//        database.getReference().child("users").child(uid).setValue(user)
+//            .addOnSuccessListener {
+//                Log.d("saveUserdata", "Success")
+//            }
+//            .addOnFailureListener { exception ->
+//                Log.d("saveUserdata", "Failure", exception)
+//            }
+//    }
 }

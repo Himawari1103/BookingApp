@@ -20,14 +20,16 @@ class FirebaseUtils {
                     .get()
                     .await()
                 query.children.firstOrNull()?.let { snapshot ->
-                    val uid = snapshot.key ?: ""
-                    val email = snapshot.child("email").getValue(String::class.java) ?: ""
-                    val fullName = snapshot.child("fullName").getValue(String::class.java) ?: ""
+//                    val uid = snapshot.key ?: ""
+//                    val email = snapshot.child("email").getValue(String::class.java) ?: ""
+//                    val fullName = snapshot.child("fullName").getValue(String::class.java) ?: ""
+                    val user = snapshot.getValue(UserModel::class.java)
                     Log.d(
                         "FindUserByEmail Debug",
-                        "Found user with UID: $uid, email: $email, fullName: $fullName"
+                        "Found user with UID: ${user!!.uid}, email: $email, fullName: ${user.fullName}"
                     )
-                    UserModel(fullName = fullName, email = email, uid = uid)
+//                    UserModel(fullName = fullName, email = email, uid = uid)
+                    user
                 }
             } catch (e: Exception) {
                 Log.e("FindUserByEmail Error", "Error finding user by email: ${e.message}")
@@ -37,37 +39,27 @@ class FirebaseUtils {
 
         suspend fun findUserByUid(uid: String): UserModel? {
             return try {
-                val userRef = database.reference.child("users").child(uid)
-                var user: UserModel? = null
-                userRef.addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                        user = snapshot.getValue(UserModel::class.java)
-                        if (user != null) {
-                            println("Email: ${user!!.email}")
-                            println("Full name: ${user!!.fullName}")
-                        } else {
-                            println("User not found!")
-                        }
-                    }
+                val query = database.reference.child("users")
+                    .orderByKey()
+                    .equalTo(uid)
+                    .get()
+                    .await()
+                query.children.firstOrNull()?.let { snapshot ->
+                    val user = snapshot.getValue(UserModel::class.java)
+                    Log.d("FindUserByUid Debug", "Found user: $user")
+                    user
+                }
 
-                    override fun onCancelled(error: DatabaseError) {
-                        println("Database error: ${error.message}")
-                    }
-                })
 
-                Log.d("FindUserByUid Debug", "Found user: $user")
-                user
             } catch (e: Exception) {
                 Log.e("FindUserByUid Error", "Error finding user by uid: ${e.message}")
                 null
             }
         }
 
-        fun saveUserdata(uid: String, fullName: String, email: String) {
-            //auth.currentUser!!.uid
-            val user = UserModel(fullName = fullName, email = email, uid = uid)
+        fun saveUserdata(userModel: UserModel) {
             //chèn dữ liệu vào database
-            database.getReference().child("users").child(uid).setValue(user)
+            database.getReference().child("users").child(userModel.uid).setValue(userModel)
                 .addOnSuccessListener {
                     Log.d("saveUserdata", "Success")
                 }
