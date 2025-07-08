@@ -3,8 +3,10 @@ package com.nquang.bookingapp.navigation
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.util.Log
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -38,13 +40,16 @@ import com.nquang.bookingapp.mainapp.screens.tourism.TourismScreen
 import com.nquang.bookingapp.mainapp.screens.tourismdetail.TourismDetailScreen
 import com.nquang.bookingapp.mainapp.viewmodel.AccountViewModel
 import com.nquang.bookingapp.utils.GoogleSignInUtils
+import com.nquang.bookingapp.viewmodel.HotelViewModel
 import com.nquang.bookingapp.viewmodel.UserViewModel
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MainNavigation(
     navController: NavHostController = rememberNavController(),
     accountViewModel: AccountViewModel = viewModel(),
     userViewModel: UserViewModel,
+    hotelViewModel: HotelViewModel,
     modifier: Modifier = Modifier
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -60,7 +65,10 @@ fun MainNavigation(
     ) {
         // Màn hình chính
         composable("home") {
-            HomeScreen(navController = navController)
+            HomeScreen(
+                navController = navController,
+                hotelViewModel = hotelViewModel
+            )
         }
 
         composable("bookings") {
@@ -84,7 +92,11 @@ fun MainNavigation(
                     Log.e("MainNavigation", "Google logout failed: ${e.message}", e)
                 }
             }
-            AccountScreen(navController = navController, onLogout = { onLogout() }, userViewModel = userViewModel)
+            AccountScreen(
+                navController = navController,
+                onLogout = { onLogout() },
+                userViewModel = userViewModel
+            )
         }
 
         // Màn hình danh sách khách sạn
@@ -97,7 +109,8 @@ fun MainNavigation(
             val hotelId = backStackEntry.arguments?.getString("hotelId") ?: ""
             HotelDetailScreen(
                 navController = navController,
-                hotelId = hotelId
+                hotelId = hotelId,
+                hotelViewModel = hotelViewModel
             )
         }
 
@@ -106,7 +119,8 @@ fun MainNavigation(
             val hotelId = backStackEntry.arguments?.getString("hotelId") ?: ""
             RoomListScreen(
                 navController = navController,
-                hotelId = hotelId
+                hotelId = hotelId,
+                hotelViewModel = hotelViewModel
             )
         }
 

@@ -1,5 +1,7 @@
 package com.nquang.bookingapp.mainapp.screens.hoteldetail.components
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -11,9 +13,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.nquang.bookingapp.model.HotelModelGet
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun CheckInOutSection() {
+fun CheckInOutSection(
+    hotelModel: HotelModelGet
+) {
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -71,12 +77,15 @@ fun CheckInOutSection() {
                 }
 
                 Spacer(modifier = Modifier.height(12.dp))
-
-                CheckInOutRow("Theo giờ", "Từ 06:00 tới 23:00")
+                val startDay = hotelModel.policies.checkIn.minusHours(2)
+                val endDay = startDay.plusHours(8)
+                val startNight = endDay.plusHours(4)
+                val endNight = startNight.plusHours(8)
+                CheckInOutRow("Ban ngày", "Từ $startDay tới $endDay")
                 Spacer(modifier = Modifier.height(8.dp))
-                CheckInOutRow("Qua đêm", "Từ 22:00 tới 10:00")
+                CheckInOutRow("Qua đêm", "Từ $startNight tới $endNight")
                 Spacer(modifier = Modifier.height(8.dp))
-                CheckInOutRow("Theo ngày", "Từ 14:00 tới 12:00")
+                CheckInOutRow("Theo ngày", "Từ $startDay tới $endNight")
             }
         }
 

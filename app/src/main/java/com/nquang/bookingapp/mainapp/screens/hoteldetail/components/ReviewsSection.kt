@@ -22,9 +22,10 @@ import androidx.navigation.NavController
 import com.nquang.bookingapp.mainapp.data.model.common.Hotel
 import com.nquang.bookingapp.mainapp.data.model.reviews.ReviewItem
 import com.nquang.bookingapp.mainapp.data.repository.ReviewRepository
+import com.nquang.bookingapp.model.HotelModelGet
 
 @Composable
-fun ReviewsSection(hotel: Hotel, navController: NavController) {
+fun ReviewsSection(hotel: HotelModelGet, navController: NavController) {
     // Lấy data từ repository
     val reviews = ReviewRepository.getReviewsForHotelDetail(hotel.id)
 

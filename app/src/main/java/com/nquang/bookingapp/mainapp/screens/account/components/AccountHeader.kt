@@ -18,7 +18,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.nquang.bookingapp.mainapp.data.model.account.User
 import com.nquang.bookingapp.model.UserModel
 
 @Composable
@@ -134,39 +133,39 @@ fun AccountHeader(
             Spacer(modifier = Modifier.height(12.dp))
 
             // Warning banner
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(
-                        Color(0xFFFF6B35).copy(alpha = 0.1f),
-                        RoundedCornerShape(8.dp)
-                    )
-                    .padding(12.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(20.dp)
-                        .clip(CircleShape)
-                        .background(Color(0xFFFF6B35)),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "!",
-                        color = Color.White,
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-
-                Spacer(modifier = Modifier.width(8.dp))
-
-                Text(
-                    text = "Vui lòng điền đầy đủ thông tin",
-                    fontSize = 12.sp,
-                    color = Color(0xFFFF6B35)
-                )
-            }
+//            Row(
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .background(
+//                        Color(0xFFFF6B35).copy(alpha = 0.1f),
+//                        RoundedCornerShape(8.dp)
+//                    )
+//                    .padding(12.dp),
+//                verticalAlignment = Alignment.CenterVertically
+//            ) {
+//                Box(
+//                    modifier = Modifier
+//                        .size(20.dp)
+//                        .clip(CircleShape)
+//                        .background(Color(0xFFFF6B35)),
+//                    contentAlignment = Alignment.Center
+//                ) {
+//                    Text(
+//                        text = "!",
+//                        color = Color.White,
+//                        fontSize = 12.sp,
+//                        fontWeight = FontWeight.Bold
+//                    )
+//                }
+//
+//                Spacer(modifier = Modifier.width(8.dp))
+//
+//                Text(
+//                    text = "Vui lòng điền đầy đủ thông tin",
+//                    fontSize = 12.sp,
+//                    color = Color(0xFFFF6B35)
+//                )
+//            }
         }
     }
 }

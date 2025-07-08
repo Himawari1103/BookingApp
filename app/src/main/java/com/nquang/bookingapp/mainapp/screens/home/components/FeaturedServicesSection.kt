@@ -1,5 +1,8 @@
 package com.nquang.bookingapp.mainapp.screens.home.components
 
+import android.os.Build
+import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -21,76 +24,34 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.nquang.bookingapp.mainapp.data.model.ServiceItem
 import com.nquang.bookingapp.mainapp.data.model.ServiceType
 import com.nquang.bookingapp.R
+import com.nquang.bookingapp.viewmodel.HotelViewModel
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun FeaturedServicesSection(navController: NavController) {
-    val services = listOf(
-        ServiceItem(
-            id = "1",
-            title = "Vietnam e-Visa Service for International Tourist",
-            location = "Thành phố Hồ Chí Minh",
-            rating = 4.7f,
-            reviewCount = 213,
-            price = "1,115,000",
-            type = ServiceType.VISA,
-            imageRes = R.drawable.hotel6
-        ),
-        ServiceItem(
-            id = "2",
-            title = "Halong Bay Day Tour: Sung Sot Cave by Luxury Iris Cruise",
-            location = "Nhiều điểm khởi hành",
-            rating = 5.0f,
-            reviewCount = 845,
-            price = "1,384,600",
-            type = ServiceType.TOUR,
-            imageRes = R.drawable.halong
-        ),
-        ServiceItem(
-            id = "3",
-            title = "Vé Xem Phim CGV 2D tại Việt Nam",
-            location = "Thành phố Hồ Chí Minh",
-            rating = 4.5f,
-            reviewCount = 300,
-            price = "110,000",
-            type = ServiceType.ENTERTAINMENT,
-            badge = "300+ Đã được đặt",
-            imageRes = R.drawable.hotel7
-        ),
-        ServiceItem(
-            id = "4",
-            title = "Tour Ngày Tham Quan Vịnh Hạ Long bằng Du Thuyền 5 Sao Cozy Bay",
-            location = "Nhiều điểm khởi hành",
-            rating = 4.8f,
-            reviewCount = 156,
-            price = "2,500,000",
-            type = ServiceType.TOUR,
-            imageRes = R.drawable.hotel8
-        ),
-        ServiceItem(
-            id = "5",
-            title = "Vé Thủy Cung Lotte World Hà Nội",
-            location = "Cách đây 10.9km",
-            rating = 4.4f,
-            reviewCount = 301,
-            price = "450,000",
-            type = ServiceType.ENTERTAINMENT,
-            imageRes = R.drawable.hotel9
-        ),
-        ServiceItem(
-            id = "6",
-            title = "Khám Phá Phiên Bản Tuyệt Nhất Của Bạn",
-            location = "Toàn quốc",
-            rating = 4.9f,
-            reviewCount = 89,
-            price = "Free",
-            type = ServiceType.EXPERIENCE,
-            badge = "Bắt đầu ngay!",
-            imageRes = R.drawable.hotel10
+fun FeaturedServicesSection(
+    navController: NavController,
+    hotelViewModel: HotelViewModel
+) {
+    val services = mutableListOf<ServiceItem>()
+    Log.d("FeaturedServicesSection", "Number of hotels: ${hotelViewModel.hotelModels.size}")
+    Log.d("FeaturedServicesSection", "HotelModels: ${hotelViewModel.hotelModels}")
+    for (hotel in hotelViewModel.hotelModels) {
+        Log.d("FeaturedServicesSection", "Hotel: $hotel")
+        val serviceItem = ServiceItem(
+            hotel!!.id,
+            hotel.name,
+            hotel.address,
+            hotel.rating,
+            hotel.reviewCount,
+            hotel.roomList[0].price.toString(),
+            hotel.thumbnailImages!![0]
         )
-    )
+        services.add(serviceItem)
+    }
 
     LazyVerticalStaggeredGrid(
         columns = StaggeredGridCells.Fixed(2),
@@ -105,7 +66,7 @@ fun FeaturedServicesSection(navController: NavController) {
             ServiceCard(
                 service = service,
                 onClick = {
-                    navController.navigate("hotel_detail/${if (service.id.toIntOrNull() != null) service.id else "1"}") // Fixed route format
+                    navController.navigate("hotel_detail/${service.id}") // Fixed route format
                 }
             )
         }
@@ -128,8 +89,14 @@ fun ServiceCard(service: ServiceItem, onClick: () -> Unit) {
                     .fillMaxWidth()
                     .height(160.dp)
             ) {
-                Image(
-                    painter = painterResource(id = service.imageRes),
+//                Image(
+//                    painter = painterResource(id = R.drawable.hotel1),
+//                    contentDescription = service.title,
+//                    modifier = Modifier.fillMaxSize(),
+//                    contentScale = ContentScale.Crop
+//                )
+                AsyncImage(
+                    model = service.imageRes,
                     contentDescription = service.title,
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop

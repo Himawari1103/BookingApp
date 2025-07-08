@@ -19,7 +19,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.nquang.bookingapp.mainapp.data.model.account.User
 import com.nquang.bookingapp.viewmodel.UserViewModel
 import java.util.*
 

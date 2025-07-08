@@ -20,6 +20,7 @@ import com.nquang.bookingapp.login.login.LoginScreen
 import com.nquang.bookingapp.navigation.AuthNavigation
 import com.nquang.bookingapp.login.ui.theme.LoginTheme
 import com.nquang.bookingapp.navigation.MainNavigation
+import com.nquang.bookingapp.viewmodel.HotelViewModel
 import com.nquang.bookingapp.viewmodel.UserViewModel
 
 class MainActivity : ComponentActivity() {
@@ -31,6 +32,7 @@ class MainActivity : ComponentActivity() {
             LoginTheme {
                 var isAuthenticated by remember { mutableStateOf(false) }
                 val userViewModel: UserViewModel = viewModel()
+                val hotelViewModel: HotelViewModel = viewModel()
 
                 if (!isAuthenticated) {
 //                    val authNavController = rememberNavController()
@@ -50,6 +52,7 @@ class MainActivity : ComponentActivity() {
                         MainNavigation(
 //                            navController = mainNavController,
                             userViewModel = userViewModel,
+                            hotelViewModel = hotelViewModel,
                             modifier = Modifier.padding(innerPadding)
                         )
                     }

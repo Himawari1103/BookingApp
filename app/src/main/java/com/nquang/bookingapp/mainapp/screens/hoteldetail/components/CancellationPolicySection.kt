@@ -11,9 +11,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.nquang.bookingapp.model.HotelModelGet
 
 @Composable
-fun CancellationPolicySection() {
+fun CancellationPolicySection(
+//    hotelModel: HotelModelGet
+) {
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -43,23 +46,6 @@ fun CancellationPolicySection() {
             )
         }
 
-        // Nội dung chính sách chính
-        Text(
-            text = "Hủy miễn phí trước 16:30, 05/06/2025 đối với tất cả các phương thức thanh toán.",
-            fontSize = 14.sp,
-            color = Color.Black,
-            lineHeight = 20.sp,
-            modifier = Modifier.padding(bottom = 12.dp)
-        )
-
-        // Phần lưu ý
-        Text(
-            text = "Lưu ý:",
-            fontSize = 14.sp,
-            fontWeight = FontWeight.Medium,
-            color = Color.Black,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
 
         // Bullet point 1
         Row(
@@ -96,6 +82,26 @@ fun CancellationPolicySection() {
                 modifier = Modifier.weight(1f)
             )
         }
+
+
+        // Phần lưu ý
+        Text(
+            text = "Lưu ý:",
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Medium,
+            color = Color.Black,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+
+        // Nội dung chính sách chính
+        Text(
+            text = "Hủy miễn phí trước 16:30, 05/06/2025 đối với tất cả các phương thức thanh toán.",
+            fontSize = 14.sp,
+            color = Color.Black,
+            lineHeight = 20.sp,
+            modifier = Modifier.padding(bottom = 12.dp)
+        )
+
 
         Divider(
             modifier = Modifier

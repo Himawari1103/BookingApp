@@ -12,10 +12,15 @@ import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import com.nquang.bookingapp.mainapp.data.repository.HotelRepository
 import com.nquang.bookingapp.mainapp.screens.roomlist.components.*
+import com.nquang.bookingapp.viewmodel.HotelViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RoomListScreen(navController: NavController, hotelId: String) {
+fun RoomListScreen(
+    navController: NavController,
+    hotelId: String,
+    hotelViewModel: HotelViewModel
+) {
     val hotel = HotelRepository.getHotelById(hotelId)
     val scrollState = rememberScrollState()
 

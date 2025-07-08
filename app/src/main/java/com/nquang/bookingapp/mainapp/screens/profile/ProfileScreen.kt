@@ -24,9 +24,7 @@ fun ProfileScreen(
     onBackClick: () -> Unit,
     userViewModel: UserViewModel,
 ) {
-    val user = AccountRepository.getCurrentUser()
     var showImagePicker by remember { mutableStateOf(false) }
-    var currentUser by remember { mutableStateOf(user) }
     val context = LocalContext.current
 
     val userModel = userViewModel.userModel.value
@@ -95,7 +93,7 @@ fun ProfileScreen(
         ImagePickerDialog(
             onDismiss = { showImagePicker = false },
             onImageSelected = { imageUri ->
-                currentUser = currentUser.copy(avatarUrl = imageUri)
+                userViewModel.userModel.value = userModel.copy(avatarUrl = imageUri)
                 showImagePicker = false
             }
         )

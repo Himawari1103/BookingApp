@@ -15,9 +15,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.nquang.bookingapp.mainapp.data.model.common.Hotel
+import com.nquang.bookingapp.model.HotelModelGet
 
 @Composable
-fun HotelInfoSection(hotel: Hotel) {
+fun HotelInfoSection(hotel: HotelModelGet) {
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -87,11 +88,11 @@ fun HotelInfoSection(hotel: Hotel) {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = "Cách bạn ${hotel.distance}",
-                fontSize = 14.sp,
-                color = Color.Gray
-            )
+//            Text(
+//                text = "Cách bạn ${hotel.distance}",
+//                fontSize = 14.sp,
+//                color = Color.Gray
+//            )
 
             Text(
                 text = "Xem bản đồ >",

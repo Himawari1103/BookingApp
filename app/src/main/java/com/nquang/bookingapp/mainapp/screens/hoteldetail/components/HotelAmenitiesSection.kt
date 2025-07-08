@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.nquang.bookingapp.model.HotelModelGet
 
 data class Amenity(
     val name: String,
@@ -24,7 +25,9 @@ data class Amenity(
 )
 
 @Composable
-fun HotelAmenitiesSection() {
+fun HotelAmenitiesSection(
+    hotelModel: HotelModelGet
+) {
     var showAllAmenities by remember { mutableStateOf(false) }
 
     val amenities = listOf(
@@ -80,14 +83,14 @@ fun HotelAmenitiesSection() {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Text(
-            text = if (showAllAmenities) "Thu gọn" else "Xem tất cả",
-            fontSize = 16.sp,
-            color = Color(0xFFFF6B35),
-            modifier = Modifier
-                .clickable { showAllAmenities = !showAllAmenities }
-                .padding(vertical = 8.dp)
-        )
+//        Text(
+//            text = if (showAllAmenities) "Thu gọn" else "Xem tất cả",
+//            fontSize = 16.sp,
+//            color = Color(0xFFFF6B35),
+//            modifier = Modifier
+//                .clickable { showAllAmenities = !showAllAmenities }
+//                .padding(vertical = 8.dp)
+//        )
 
         Divider(
             modifier = Modifier

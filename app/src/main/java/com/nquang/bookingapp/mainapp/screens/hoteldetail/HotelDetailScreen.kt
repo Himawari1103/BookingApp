@@ -1,5 +1,8 @@
 package com.nquang.bookingapp.mainapp.screens.hoteldetail
 
+import android.os.Build
+import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -19,11 +22,27 @@ import com.nquang.bookingapp.mainapp.screens.hoteldetail.components.HotelImageGa
 import com.nquang.bookingapp.mainapp.screens.hoteldetail.components.HotelInfoSection
 import com.nquang.bookingapp.mainapp.screens.hoteldetails.components.HotelTopBar
 import com.nquang.bookingapp.mainapp.screens.hoteldetails.components.*
+import com.nquang.bookingapp.model.HotelModelGet
+import com.nquang.bookingapp.viewmodel.HotelViewModel
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HotelDetailScreen(navController: NavController, hotelId: String) {
-    val hotel = HotelRepository.getHotelById(hotelId)
+fun HotelDetailScreen(
+    navController: NavController,
+    hotelId: String,
+    hotelViewModel: HotelViewModel,
+) {
+    Log.d("HotelDetailScreen", "Hotel ID: $hotelId")
+    var hotelModel: HotelModelGet? = null
+    for (hotel in hotelViewModel.hotelModels) {
+        if(hotel!!.id == hotelId){
+            hotelModel = hotel
+            break;
+        }
+    }
+    hotelModel!!
+
     val scrollState = rememberScrollState()
 
     // Theo dõi khi nào cần hiển thị sticky header
@@ -40,7 +59,7 @@ fun HotelDetailScreen(navController: NavController, hotelId: String) {
                 .verticalScroll(scrollState)
         ) {
             // Gallery ảnh khách sạn
-            HotelImageGallery(hotel)
+            HotelImageGallery(hotelModel)
 
             // Chi tiết khách sạn với spacing nhất quán
             Column(
@@ -50,19 +69,19 @@ fun HotelDetailScreen(navController: NavController, hotelId: String) {
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 // Phần thông tin khách sạn (tên, địa chỉ, rating)
-                HotelInfoSection(hotel)
+                HotelInfoSection(hotelModel)
 
                 // Phần đánh giá
-                ReviewsSection(hotel, navController)
+                ReviewsSection(hotelModel, navController)
 
                 // Phần tiện ích khách sạn
-                HotelAmenitiesSection()
+                HotelAmenitiesSection(hotelModel)
 
                 // Phần mô tả khách sạn
-                HotelDescriptionSection()
+                HotelDescriptionSection(hotelModel)
 
                 // Phần thời gian check-in/check-out
-                CheckInOutSection()
+                CheckInOutSection(hotelModel)
 
                 // Phần chính sách hủy phòng
                 CancellationPolicySection()
@@ -88,7 +107,7 @@ fun HotelDetailScreen(navController: NavController, hotelId: String) {
         if (showStickyHeader) {
             StickyHotelTopBar(
                 navController = navController,
-                hotelName = hotel.name,
+                hotelName = hotelModel.name,
                 modifier = Modifier
                     .align(Alignment.TopStart)
                     .zIndex(10f)
@@ -97,8 +116,7 @@ fun HotelDetailScreen(navController: NavController, hotelId: String) {
 
         // Nút đặt phòng ở dưới cùng
         HotelBookingButton(
-            price = hotel.price,
-            originalPrice = hotel.originalPrice,
+            price = hotelModel.roomList[0].price.toString(),
             modifier = Modifier.align(Alignment.BottomCenter),
             navController = navController,
             hotelId = hotelId

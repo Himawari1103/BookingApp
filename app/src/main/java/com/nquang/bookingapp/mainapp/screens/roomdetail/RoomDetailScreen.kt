@@ -24,7 +24,9 @@ import com.nquang.bookingapp.mainapp.screens.roomdetail.components.*
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RoomDetailScreen(navController: NavController, roomId: String) {
+fun RoomDetailScreen(
+    navController: NavController, roomId: String,
+) {
     println("DEBUG: RoomDetailScreen được gọi với roomId = $roomId")
 
     // Hiển thị thông báo đang ở màn hình chi tiết phòng

@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.nquang.bookingapp"
-    compileSdk = 35
+        compileSdk = 35
 
     defaultConfig {
         applicationId = "com.nquang.bookingapp"
@@ -42,7 +42,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
@@ -66,5 +65,6 @@ dependencies {
     implementation(libs.navigation.compose)
     implementation(libs.ui.tooling)
     debugImplementation(libs.ui.test.manifest)
-    implementation(libs.androidx.material.icons.extended.android) // Or the latest version
+    implementation(libs.androidx.material.icons.extended.android)
+    implementation(libs.coil.compose)
 }

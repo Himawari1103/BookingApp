@@ -1,5 +1,7 @@
 package com.nquang.bookingapp.mainapp.screens.home
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -11,17 +13,22 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import com.nquang.bookingapp.mainapp.screens.home.components.*
+import com.nquang.bookingapp.viewmodel.HotelViewModel
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavController) {
-    var selectedTab by remember { mutableStateOf(0) }
+fun HomeScreen(
+    navController: NavController,
+    hotelViewModel: HotelViewModel
+) {
+    var selectedTab by remember { mutableIntStateOf(0) }
     val listState = rememberLazyListState()
-    var lastScrollOffset by remember { mutableStateOf(0) }
+    var lastScrollOffset by remember { mutableIntStateOf(0) }
     var isScrollingDown by remember { mutableStateOf(true) }
 
     // Track scroll direction
-    LaunchedEffect(listState.firstVisibleItemScrollOffset) {
+    LaunchedEffect(remember { derivedStateOf { listState.firstVisibleItemScrollOffset } }) {
         val currentOffset = listState.firstVisibleItemScrollOffset
         isScrollingDown = currentOffset > lastScrollOffset
         lastScrollOffset = currentOffset
@@ -53,9 +60,9 @@ fun HomeScreen(navController: NavController) {
             }
 
             // Main Content with White Background
-            item {
-                MainContentSection(navController)
-            }
+//            item {
+//                MainContentSection(navController)
+//            }
 
             // Tab Section (normal position in content)
             item {
@@ -68,7 +75,10 @@ fun HomeScreen(navController: NavController) {
             // Featured Services Section
             if (selectedTab == 0) {
                 item {
-                    FeaturedServicesSection(navController)
+                    FeaturedServicesSection(
+                        navController,
+                        hotelViewModel = hotelViewModel
+                    )
                 }
             }
 

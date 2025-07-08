@@ -11,9 +11,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.nquang.bookingapp.model.HotelModelGet
 
 @Composable
-fun HotelDescriptionSection() {
+fun HotelDescriptionSection(
+    hotelModel: HotelModelGet
+) {
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -44,7 +47,7 @@ fun HotelDescriptionSection() {
         }
 
         Text(
-            text = "NNT HOTEL đa năng cấp hạng phòng, thay đổi nội thất để hoàn thiện tốt mang lại trải nghiệm tốt hơn cho quý khách. Quý khách được miễn phí:",
+            text = hotelModel.description,
             fontSize = 14.sp,
             color = Color.DarkGray,
             lineHeight = 20.sp,
@@ -52,29 +55,7 @@ fun HotelDescriptionSection() {
         )
 
         Text(
-            text = "• SmartTivi kết nối mạng",
-            fontSize = 14.sp,
-            color = Color.DarkGray,
-            modifier = Modifier.padding(bottom = 4.dp)
-        )
-
-        Text(
-            text = "• Bãi đỗ xe máy, xe oto rộng miễn phí",
-            fontSize = 14.sp,
-            color = Color.DarkGray,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
-
-        Text(
-            text = "Quý khách có thể thanh toán bằng thẻ tín dụng, chuyển khoản, momo ... tại khách sạn sau khi thuê phòng",
-            fontSize = 14.sp,
-            color = Color.DarkGray,
-            lineHeight = 20.sp,
-            modifier = Modifier.padding(bottom = 12.dp)
-        )
-
-        Text(
-            text = "NNT HOTEL",
+            text = hotelModel.name,
             fontSize = 14.sp,
             fontWeight = FontWeight.Bold,
             color = Color.Black,
@@ -82,24 +63,17 @@ fun HotelDescriptionSection() {
         )
 
         Text(
-            text = "Địa chỉ: Số 43 ngõ 6 Trần Quốc Hoàn, Cầu Giấy, Hà Nội",
+            text = hotelModel.address,
             fontSize = 14.sp,
             color = Color.DarkGray,
             modifier = Modifier.padding(bottom = 2.dp)
         )
 
         Text(
-            text = "Phone: 024 37545966",
+            text = hotelModel.phoneNumber,
             fontSize = 14.sp,
             color = Color.DarkGray,
             modifier = Modifier.padding(bottom = 2.dp)
-        )
-
-        Text(
-            text = "Hotline zalo: 034 9881105",
-            fontSize = 14.sp,
-            color = Color.DarkGray,
-            modifier = Modifier.padding(bottom = 12.dp)
         )
 
         Divider(

@@ -1,13 +1,17 @@
 package com.nquang.bookingapp.viewmodel
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.nquang.bookingapp.model.HotelModelGet
 import com.nquang.bookingapp.model.UserModel
 import com.nquang.bookingapp.utils.FirebaseUtils
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 class UserViewModel : ViewModel() {

@@ -19,7 +19,6 @@ import androidx.navigation.NavController
 @Composable
 fun HotelBookingButton(
     price: String,
-    originalPrice: String,
     modifier: Modifier = Modifier,
     navController: NavController,
     hotelId: String
@@ -33,34 +32,34 @@ fun HotelBookingButton(
             modifier = Modifier.padding(16.dp)
         ) {
             // Booking info row
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(
-                        Color(0xFFF0F0F0),
-                        RoundedCornerShape(12.dp)
-                    )
-                    .padding(12.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    Icons.Default.Schedule,
-                    contentDescription = "Schedule",
-                    tint = Color(0xFFFF6B35),
-                    modifier = Modifier.size(20.dp)
-                )
+//            Row(
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .background(
+//                        Color(0xFFF0F0F0),
+//                        RoundedCornerShape(12.dp)
+//                    )
+//                    .padding(12.dp),
+//                verticalAlignment = Alignment.CenterVertically
+//            ) {
+//                Icon(
+//                    Icons.Default.Schedule,
+//                    contentDescription = "Schedule",
+//                    tint = Color(0xFFFF6B35),
+//                    modifier = Modifier.size(20.dp)
+//                )
+//
+//                Spacer(modifier = Modifier.width(8.dp))
+//
+//                Text(
+//                    text = "01 đêm | 22:00, 04/06 → 10:00, 05/06",
+//                    fontSize = 14.sp,
+//                    color = Color.Black,
+//                    fontWeight = FontWeight.Medium
+//                )
+//            }
 
-                Spacer(modifier = Modifier.width(8.dp))
-
-                Text(
-                    text = "01 đêm | 22:00, 04/06 → 10:00, 05/06",
-                    fontSize = 14.sp,
-                    color = Color.Black,
-                    fontWeight = FontWeight.Medium
-                )
-            }
-
-            Spacer(modifier = Modifier.height(12.dp))
+//            Spacer(modifier = Modifier.height(12.dp))
 
             // Price and button row
             Row(
@@ -70,14 +69,7 @@ fun HotelBookingButton(
             ) {
                 Column {
                     Text(
-                        text = "Chỉ từ ${originalPrice}đ",
-                        fontSize = 14.sp,
-                        color = Color.Gray,
-                        textDecoration = TextDecoration.LineThrough
-                    )
-
-                    Text(
-                        text = "${price}đ",
+                        text = "Chỉ từ ${price}đ",
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.Black

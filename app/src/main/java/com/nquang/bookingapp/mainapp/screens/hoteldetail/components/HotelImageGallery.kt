@@ -19,21 +19,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.nquang.bookingapp.mainapp.data.model.common.Hotel
 import com.nquang.bookingapp.R
+import com.nquang.bookingapp.model.HotelModelGet
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun HotelImageGallery(hotel: Hotel) {
+fun HotelImageGallery(hotel: HotelModelGet) {
     // Create a list of images for the gallery
-    val images = listOf(
-        hotel.imageRes,
-        R.drawable.hotel2,
-        R.drawable.hotel3,
-        R.drawable.hotel4,
-        hotel.thumbnailImages[0],
-        hotel.thumbnailImages[1]
-    ).distinct() // Remove any duplicates
+    val images = hotel.thumbnailImages!!
 
     val pagerState = rememberPagerState(pageCount = { images.size })
 
@@ -47,8 +42,8 @@ fun HotelImageGallery(hotel: Hotel) {
             state = pagerState,
             modifier = Modifier.fillMaxSize()
         ) { page ->
-            Image(
-                painter = painterResource(id = images[page]),
+            AsyncImage(
+                model = images[page],
                 contentDescription = "Hotel image ${page + 1}",
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
@@ -64,7 +59,7 @@ fun HotelImageGallery(hotel: Hotel) {
                 .padding(horizontal = 12.dp, vertical = 6.dp)
         ) {
             Text(
-                text = "+${hotel.imageCount}",
+                text = "+${images.size}",
                 color = Color.White,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Medium
@@ -101,8 +96,8 @@ fun HotelImageGallery(hotel: Hotel) {
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         images.take(4).forEach { imageRes ->
-            Image(
-                painter = painterResource(id = imageRes),
+            AsyncImage(
+                model = imageRes,
                 contentDescription = null,
                 modifier = Modifier
                     .weight(1f)

@@ -44,7 +44,7 @@ fun LoginScreen(
     var passwordVisible by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
     val loginState by loginViewModel.loginState.collectAsState()
-    val authState by registerViewModel.authState.collectAsState()
+//    val authState by registerViewModel.authState.collectAsState()
 
     Box(
         modifier = Modifier
@@ -206,7 +206,8 @@ fun LoginScreen(
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color(0xFF2684FF)
                         ),
-                        shape = RoundedCornerShape(8.dp)
+                        shape = RoundedCornerShape(8.dp),
+                        enabled = !loginState.isLoading
                     ) {
                         if (loginState.isLoading) {
                             CircularProgressIndicator(

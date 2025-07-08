@@ -1,30 +1,28 @@
 package com.nquang.bookingapp.mainapp.data.repository
 
 import com.nquang.bookingapp.R
-import com.nquang.bookingapp.mainapp.data.model.account.ConnectedAccount
 import com.nquang.bookingapp.mainapp.data.model.account.MenuItem
-import com.nquang.bookingapp.mainapp.data.model.account.User
 
 object AccountRepository {
 
-    fun getCurrentUser(): User {
-        return User(
-            id = "1",
-            name = "Giang",
-            phone = "+84 986296088",
-            email = "haivann930@gmail.com",
-            nickname = "Giang",
-            referralCode = "GJ123456"
-        )
-    }
+//    fun getCurrentUser(): User {
+//        return User(
+//            id = "1",
+//            name = "Giang",
+//            phone = "+84 986296088",
+//            email = "haivann930@gmail.com",
+//            nickname = "Giang",
+//            referralCode = "GJ123456"
+//        )
+//    }
 
-    fun getConnectedAccounts(): List<ConnectedAccount> {
-        return listOf(
-            ConnectedAccount("facebook", "Facebook", R.drawable.ic_facebook, false),
-            ConnectedAccount("google", "Google", R.drawable.ic_google, true),
-            ConnectedAccount("apple", "Apple ID", R.drawable.ic_apple, false)
-        )
-    }
+//    fun getConnectedAccounts(): List<ConnectedAccount> {
+//        return listOf(
+//            ConnectedAccount("facebook", "Facebook", R.drawable.ic_facebook, false),
+//            ConnectedAccount("google", "Google", R.drawable.ic_google, true),
+//            ConnectedAccount("apple", "Apple ID", R.drawable.ic_apple, false)
+//        )
+//    }
 
     fun getMyPageMenuItems(): List<MenuItem> {
         return listOf(
@@ -96,18 +94,18 @@ object AccountRepository {
         )
     }
 
-    fun updateUserProfile(user: User): Boolean {
-        // Simulate API call
-        return true
-    }
-
-    fun updateConnectedAccount(accountId: String, isConnected: Boolean): Boolean {
-        // Simulate API call
-        return true
-    }
-
-    fun deleteAccount(reason: String): Boolean {
-        // Simulate API call
-        return true
-    }
+//    fun updateUserProfile(user: User): Boolean {
+//        // Simulate API call
+//        return true
+//    }
+//
+//    fun updateConnectedAccount(accountId: String, isConnected: Boolean): Boolean {
+//        // Simulate API call
+//        return true
+//    }
+//
+//    fun deleteAccount(reason: String): Boolean {
+//        // Simulate API call
+//        return true
+//    }
 }

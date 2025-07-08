@@ -1,12 +1,23 @@
 package com.nquang.bookingapp.utils
 
+import android.os.Build
 import android.util.Log
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
+import androidx.annotation.RequiresApi
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.GenericTypeIndicator
+import com.nquang.bookingapp.model.FavouriteHotelModel
+import com.nquang.bookingapp.model.HotelModelGet
+import com.nquang.bookingapp.model.HotelPolicies
+import com.nquang.bookingapp.model.HotelReview
+import com.nquang.bookingapp.model.RoomBookingModelGet
+import com.nquang.bookingapp.model.RoomBookingModelSet
+import com.nquang.bookingapp.model.RoomBookingStatus
+import com.nquang.bookingapp.model.RoomBookingType
+import com.nquang.bookingapp.model.RoomModelGet
+import com.nquang.bookingapp.model.RoomType
 import com.nquang.bookingapp.model.UserModel
 import kotlinx.coroutines.tasks.await
+import java.time.LocalTime
 
 class FirebaseUtils {
     companion object {
@@ -57,6 +68,169 @@ class FirebaseUtils {
             }
         }
 
+        @RequiresApi(Build.VERSION_CODES.O)
+        suspend fun findAllHotel(): List<HotelModelGet> {
+            return try {
+                val query = database.reference.child("hotels")
+                    .get()
+                    .await()
+                val hotelList: List<HotelModelGet> = query.children.mapNotNull { snapshot ->
+                    Log.d("FindAllHotel Debug", "Found hotel key: ${snapshot.key}")
+                    val id = snapshot.key ?: ""
+                    val name = snapshot.child("name").getValue(String::class.java) ?: ""
+                    val phoneNumber = snapshot.child("phoneNumber").getValue(String::class.java)
+                        ?: ""
+                    val rating = snapshot.child("rating").getValue(Float::class.java) ?: 0f
+                    val reviewCount = snapshot.child("reviewCount").getValue(Int::class.java) ?: 0
+                    val address = snapshot.child("address").getValue(String::class.java) ?: ""
+                    val longitude = snapshot.child("longitude").getValue(Double::class.java) ?: 0.0
+                    val latitude = snapshot.child("latitude").getValue(Double::class.java) ?: 0.0
+                    val thumbnailImages = snapshot.child("thumbnailImages")
+                        .getValue(object : GenericTypeIndicator<List<String>>() {})
+                    val amenities = snapshot.child("amenities")
+                        .getValue(object : GenericTypeIndicator<List<String>>() {})
+                    val description = snapshot.child("description").getValue(String::class.java)
+                        ?: ""
+                    val policies = HotelPolicies(
+                        checkIn = Utils.stringToLocalTime(
+                            snapshot.child("policies").child("checkIn")
+                                .getValue(String::class.java)
+                        ) ?: LocalTime.now(),
+                        checkOut = Utils.stringToLocalTime(
+                            snapshot.child("policies").child("checkOut")
+                                .getValue(String::class.java)
+                        ) ?: LocalTime.now(),
+                        otherPolicy = snapshot.child("policies").child("otherPolicy")
+                            .getValue(String::class.java) ?: ""
+                    )
+                    val reviews = snapshot.child("reviews")
+                        .getValue(object : GenericTypeIndicator<List<HotelReview>>() {})
+                    val roomList = mutableListOf<RoomModelGet>();
+                    val roomIdList = snapshot.child("roomList")
+                        .getValue(object : GenericTypeIndicator<List<String>>() {})
+                    if (roomIdList != null) {
+                        for (roomId in roomIdList) {
+                            val room = findRoomById(roomId)
+                            if (room != null) {
+                                roomList.add(room)
+                            }
+                        }
+                    }
+                    HotelModelGet(
+                        id = id,
+                        name = name,
+                        phoneNumber = phoneNumber,
+                        rating = rating,
+                        reviewCount = reviewCount,
+                        address = address,
+                        longitude = longitude,
+                        latitude = latitude,
+                        thumbnailImages = thumbnailImages,
+                        amenities = amenities,
+                        description = description,
+                        policies = policies,
+                        reviews = reviews,
+                        roomList = roomList
+                    )
+                }
+                Log.d("FindAllHotel Debug", "Found ${hotelList.size} hotels")
+                hotelList
+            } catch (e: Exception) {
+                Log.e("FindAllHotel Error", "Error finding all hotels: ${e.message}")
+                emptyList()
+            }
+        }
+
+        @RequiresApi(Build.VERSION_CODES.O)
+        suspend fun findRoomById(id: String): RoomModelGet? {
+            return try {
+                val query = database.reference.child("rooms")
+                    .orderByKey()
+                    .equalTo(id)
+                    .get()
+                    .await()
+                query.children.firstOrNull()?.let { snapshot ->
+                    val id = snapshot.key
+                    val hotelId = snapshot.child("hotelId").getValue(String::class.java)
+                    val type =
+                        RoomType.valueOf(snapshot.child("type").getValue(String::class.java)!!)
+                    val price = snapshot.child("price").getValue(Int::class.java)
+                    val discount = snapshot.child("discount").getValue(Float::class.java)
+                    val thumbnailImages = snapshot.child("thumbnailImages")
+                        .getValue(object : GenericTypeIndicator<List<String>>() {})
+                    val bookingIdList = snapshot.child("bookingList")
+                        .getValue(object : GenericTypeIndicator<List<String>>() {})
+
+                    val bookingList = mutableListOf<RoomBookingModelGet>()
+                    if (bookingIdList != null) {
+                        for (bookingId in bookingIdList) {
+                            val booking = findRoomBookingById(bookingId)
+                            if (booking != null) {
+                                bookingList.add(booking)
+                                Log.d("FindRoomById Debug", "Found booking: $booking")
+                            }
+                        }
+                    }
+                    val room = RoomModelGet(
+                        id!!,
+                        hotelId!!,
+                        type,
+                        price!!,
+                        discount!!,
+                        thumbnailImages,
+                        bookingList
+                    )
+                    Log.d("FindUserByUid Debug", "Found room: $room")
+                    room
+                }
+            } catch (e: Exception) {
+                Log.e("FindRoomById Error", "Error finding room by id: ${e.message}")
+                null
+            }
+        }
+
+        @RequiresApi(Build.VERSION_CODES.O)
+        suspend fun findRoomBookingById(id: String): RoomBookingModelGet? {
+            return try {
+                val query = database.reference.child("roomBookings")
+                    .orderByKey()
+                    .equalTo(id)
+                    .get()
+                    .await()
+                query.children.firstOrNull()?.let { snapshot ->
+                    val id = snapshot.key ?: ""
+                    val userId = snapshot.child("userId").getValue(String::class.java)
+                    val roomId = snapshot.child("roomId").getValue(String::class.java)
+                    val checkInDate = Utils.stringToLocalDateTime(
+                        snapshot.child("checkInDateTime").getValue(String::class.java)
+                    )
+                    val checkOutDate = Utils.stringToLocalDateTime(
+                        snapshot.child("checkOutDateTime").getValue(String::class.java)
+                    )
+                    val status = RoomBookingStatus.valueOf(
+                        snapshot.child("status").getValue(String::class.java)!!
+                    )
+                    val type = RoomBookingType.valueOf(
+                        snapshot.child("type").getValue(String::class.java)!!
+                    )
+                    val roomBooking = RoomBookingModelGet(
+                        id,
+                        userId!!,
+                        roomId!!,
+                        checkInDate!!,
+                        checkOutDate!!,
+                        status,
+                        type
+                    )
+                    Log.d("FindUserByUid Debug", "Found room: $roomBooking")
+                    roomBooking
+                }
+            } catch (e: Exception) {
+                Log.e("FindRoomById Error", "Error finding room by id: ${e.message}")
+                null
+            }
+        }
+
         fun saveUserdata(userModel: UserModel) {
             //chèn dữ liệu vào database
             database.getReference().child("users").child(userModel.uid).setValue(userModel)
@@ -65,6 +239,28 @@ class FirebaseUtils {
                 }
                 .addOnFailureListener { exception ->
                     Log.d("saveUserdata", "Failure", exception)
+                }
+        }
+
+        fun saveRoomBooking(roomBookingModel: RoomBookingModelSet) {
+            database.getReference().child("roomBookings").child(roomBookingModel.id)
+                .setValue(roomBookingModel)
+                .addOnSuccessListener {
+                    Log.d("saveRoomBooking", "Success")
+                }
+                .addOnFailureListener { exception ->
+                    Log.d("saveRoomBooking", "Failure", exception)
+                }
+        }
+
+        fun saveFavouriteHotel(favouriteHotelModel: FavouriteHotelModel) {
+            database.getReference().child("favouriteHotels").child(favouriteHotelModel.id)
+                .setValue(favouriteHotelModel)
+                .addOnSuccessListener {
+                    Log.d("saveFavouriteHotel", "Success")
+                }
+                .addOnFailureListener { exception ->
+                    Log.d("saveFavouriteHotel", "Failure", exception)
                 }
         }
 

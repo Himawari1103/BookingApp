@@ -7,8 +7,8 @@ data class ServiceItem(
     val rating: Float,
     val reviewCount: Int,
     val price: String,
-    val type: ServiceType,
-    val imageRes: Int,
+//    val type: ServiceType,
+    val imageRes: String, //url image
     val badge: String? = null
 )
 

@@ -11,5 +11,7 @@ data class UserModel(
     val nickname: String? = null,
     val gender: String? = null,
     val birthDate: String? = null,
-    val referralCode: String? = null
+    val referralCode: String? = null,
+    val bookingList: List<RoomBookingModelGet>? = null,
+    val favouriteHotelList: List<FavouriteHotelModel>? = null,
 )
