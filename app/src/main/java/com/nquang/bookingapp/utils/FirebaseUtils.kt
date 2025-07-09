@@ -395,5 +395,34 @@ class FirebaseUtils {
                 }
         }
 
+        suspend fun removeFavouriteHotelByUserIdAndHotelId(userId: String, hotelId: String){
+
+            val query = database.reference.child(EndpointFirebase.FAVOURITE_HOTELS.value)
+                .orderByChild("userId")
+                .equalTo(userId)
+                .get()
+                .await()
+            query.children.firstOrNull()?.let { snapshot ->
+//                    val uid = snapshot.key ?: ""
+//                    val email = snapshot.child("email").getValue(String::class.java) ?: ""
+//                    val fullName = snapshot.child("fullName").getValue(String::class.java) ?: ""
+                val favouriteHotelModel = snapshot.getValue(FavouriteHotelModel::class.java)
+
+                if (favouriteHotelModel != null && favouriteHotelModel.hotelId == hotelId) {
+                    database.getReference().child(EndpointFirebase.FAVOURITE_HOTELS.value)
+                        .child(favouriteHotelModel.id)
+                        .removeValue()
+                        .addOnSuccessListener {
+                            Log.d("removeRoomBookingById", "Success")
+                        }
+                        .addOnFailureListener { exception ->
+                            Log.d("removeRoomBookingById", "Failure", exception)
+                        }
+                }
+
+            }
+        }
+
+
     }
 }

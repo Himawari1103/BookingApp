@@ -116,7 +116,7 @@ fun RoomCard(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    hotelModel.amenities?.forEachIndexed { index, amenity ->
+                    hotelModel.amenities?.take(3)!!.forEachIndexed { index, amenity ->
                         Text(
                             text = amenity,
                             fontSize = 14.sp,

@@ -68,6 +68,7 @@ fun AccountScreen(
                         "bookings" -> navController.navigate("bookings")
                         "favorites" -> {
                             // Navigate to favorites
+                            navController.navigate("favorites")
                         }
                     }
                 }

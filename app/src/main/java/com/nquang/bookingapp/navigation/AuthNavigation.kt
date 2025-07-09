@@ -78,7 +78,7 @@ fun AuthNavigation(
                 onLoginClick = {
                     loginViewModel.loginWithEmail(context) {
                         Toast.makeText(context, "Login successful", Toast.LENGTH_SHORT).show()
-                        onLoginSuccess() // Chuyển sang MainNavHost
+                        onLoginSuccess()
                     }
                 },
                 onRegisterClick = {
@@ -90,7 +90,7 @@ fun AuthNavigation(
                         context, scope, launcher
                     ) {
                         Toast.makeText(context, "Login successful", Toast.LENGTH_SHORT).show()
-                        onLoginSuccess() // Chuyển sang MainNavHost
+                        onLoginSuccess()
                     }
                 },
                 onForgotPasswordClick = {

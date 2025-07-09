@@ -1,5 +1,7 @@
 package com.nquang.bookingapp.mainapp.screens.bookingdetail
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -12,14 +14,23 @@ import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import com.nquang.bookingapp.mainapp.data.repository.BookingRepository
 import com.nquang.bookingapp.mainapp.screens.bookingdetail.components.*
+import com.nquang.bookingapp.model.RoomBookingModelSet
+import com.nquang.bookingapp.model.RoomBookingStatus
+import com.nquang.bookingapp.utils.FirebaseUtils
+import com.nquang.bookingapp.utils.Utils
+import com.nquang.bookingapp.viewmodel.HotelViewModel
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BookingDetailScreen(navController: NavController, bookingId: String) {
+fun BookingDetailScreen(
+    navController: NavController, bookingId: String,
+    hotelViewModel: HotelViewModel
+) {
     var showMenuDialog by remember { mutableStateOf(false) }
     var showCancelDialog by remember { mutableStateOf(false) }
 
-    val booking = BookingRepository.getAllBookings().find { it.id == bookingId }
+    val booking = hotelViewModel.roomBookingModels.filter { it!!.id == bookingId }[0]
 
     if (booking == null) {
         // Handle booking not found
@@ -64,17 +75,18 @@ fun BookingDetailScreen(navController: NavController, bookingId: String) {
                     onHotelClick = {
                         // Navigate to hotel detail - extract hotel ID from booking
                         navController.navigate("hotel_detail/1")
-                    }
+                    },
+                    hotelViewModel = hotelViewModel
                 )
 
                 // Schedule section
-                BookingScheduleSection(booking = booking)
+                BookingScheduleSection(booking = booking, hotelViewModel = hotelViewModel)
 
                 // Guest info section
                 GuestInfoSection()
 
                 // Payment details section
-                PaymentDetailsSection(booking = booking)
+                PaymentDetailsSection(booking = booking, hotelViewModel = hotelViewModel)
 
                 // Cancellation policy section
                 CancellationPolicySection(
@@ -100,7 +112,8 @@ fun BookingDetailScreen(navController: NavController, bookingId: String) {
                 onDismiss = { showMenuDialog = false },
                 onDeleteHistory = { booking ->
                     // Handle delete history
-                    BookingRepository.deleteBooking(booking.id)
+                    hotelViewModel.roomBookingModels.removeIf { it?.id == booking.id }
+                    FirebaseUtils.removeRoomBookingById(booking.id)
                 },
                 onReportError = { booking ->
                     // Handle report error
@@ -108,6 +121,7 @@ fun BookingDetailScreen(navController: NavController, bookingId: String) {
                 },
                 onCancellationPolicy = { booking ->
                     // Show cancellation policy info
+
                 }
             )
         }
@@ -118,7 +132,31 @@ fun BookingDetailScreen(navController: NavController, bookingId: String) {
                 onDismiss = { showCancelDialog = false },
                 onConfirmCancel = { reason, customReason ->
                     // Handle booking cancellation
+                    val roomBookingModel =
+                        hotelViewModel.roomBookingModels.filter { it?.id == booking.id }[0]?.copy(
+                            status = RoomBookingStatus.CANCELLED
+                        )
+                    hotelViewModel.roomBookingModels.removeIf { it?.id == booking.id }
+                    hotelViewModel.roomBookingModels.add(roomBookingModel)
+                    if (roomBookingModel != null) {
+                        FirebaseUtils.saveRoomBooking(
+                            RoomBookingModelSet(
+                                id = roomBookingModel.id,
+                                checkInDateTime = Utils.localDateTimeToStringWithTime(
+                                    roomBookingModel.checkInDateTime
+                                )!!,
+                                checkOutDateTime = Utils.localDateTimeToStringWithTime(
+                                    roomBookingModel.checkOutDateTime
+                                )!!,
+                                status = roomBookingModel.status,
+                                type = roomBookingModel.type,
+                                roomId = roomBookingModel.roomId,
+                                userId = roomBookingModel.userId,
+                            )
+                        )
+                    }
                     showCancelDialog = false
+
                     navController.popBackStack()
                 }
             )

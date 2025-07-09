@@ -36,6 +36,7 @@ import com.nquang.bookingapp.mainapp.screens.roomlist.RoomListScreen
 import com.nquang.bookingapp.mainapp.screens.profile.ProfileScreen
 import com.nquang.bookingapp.mainapp.screens.transportation.TransportationScreen
 import com.nquang.bookingapp.mainapp.screens.busdetail.BusDetailScreen
+import com.nquang.bookingapp.mainapp.screens.favourite.FavoritesScreen
 import com.nquang.bookingapp.mainapp.screens.tourism.TourismScreen
 import com.nquang.bookingapp.mainapp.screens.tourismdetail.TourismDetailScreen
 import com.nquang.bookingapp.mainapp.viewmodel.AccountViewModel
@@ -111,6 +112,14 @@ fun MainNavigation(
             )
         }
 
+        composable("favorites") {
+            FavoritesScreen(
+                navController = navController,
+                hotelViewModel = hotelViewModel
+            )
+        }
+
+
         // Màn hình chi tiết khách sạn
         composable("hotel_detail/{hotelId}") { backStackEntry ->
             val hotelId = backStackEntry.arguments?.getString("hotelId") ?: ""
@@ -169,7 +178,8 @@ fun MainNavigation(
             val bookingId = backStackEntry.arguments?.getString("bookingId") ?: ""
             BookingDetailScreen(
                 navController = navController,
-                bookingId = bookingId
+                bookingId = bookingId,
+                hotelViewModel = hotelViewModel,
             )
         }
 

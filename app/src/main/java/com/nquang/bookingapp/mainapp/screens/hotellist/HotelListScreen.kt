@@ -43,12 +43,12 @@ fun HotelListScreen(
             contentPadding = PaddingValues(top = 120.dp, bottom = 16.dp)
         ) {
             // Filter section
-            item {
-                HotelFilterSection(
-                    resultCount = hotels.size,
-                    onFilterClick = { showFilterDialog = true }
-                )
-            }
+//            item {
+//                HotelFilterSection(
+//                    resultCount = hotels.size,
+//                    onFilterClick = { showFilterDialog = true }
+//                )
+//            }
 
             // Hotel cards
             items(hotels) { hotel ->

@@ -16,14 +16,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.nquang.bookingapp.mainapp.data.model.booking.BookingItem
+import com.nquang.bookingapp.model.RoomBookingModelGet
 
 @Composable
 fun BookingDetailMenuDialog(
-    booking: BookingItem,
+    booking: RoomBookingModelGet,
     onDismiss: () -> Unit,
-    onDeleteHistory: (BookingItem) -> Unit,
-    onReportError: (BookingItem) -> Unit,
-    onCancellationPolicy: (BookingItem) -> Unit
+    onDeleteHistory: (RoomBookingModelGet) -> Unit,
+    onReportError: (RoomBookingModelGet) -> Unit,
+    onCancellationPolicy: (RoomBookingModelGet) -> Unit
 ) {
     Dialog(onDismissRequest = onDismiss) {
         Card(

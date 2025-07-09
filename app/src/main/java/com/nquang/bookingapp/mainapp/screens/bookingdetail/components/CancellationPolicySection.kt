@@ -18,10 +18,12 @@ import androidx.compose.ui.unit.sp
 import com.nquang.bookingapp.mainapp.data.model.booking.BookingItem
 import com.nquang.bookingapp.mainapp.data.model.booking.BookingStatus
 import androidx.compose.foundation.BorderStroke
+import com.nquang.bookingapp.model.RoomBookingModelGet
+import com.nquang.bookingapp.model.RoomBookingStatus
 
 @Composable
 fun CancellationPolicySection(
-    booking: BookingItem,
+    booking: RoomBookingModelGet,
     onCancelBooking: () -> Unit
 ) {
     Column(
@@ -53,7 +55,7 @@ fun CancellationPolicySection(
         }
 
         when (booking.status) {
-            BookingStatus.WAITING_CHECKIN -> {
+            RoomBookingStatus.PENDING -> {
                 // Active booking - show cancellation policy and button
                 Text(
                     text = "Hủy miễn phí trước 07:00, 09/02/2026",
@@ -110,7 +112,7 @@ fun CancellationPolicySection(
                 }
             }
 
-            BookingStatus.CANCELLED -> {
+            RoomBookingStatus.CANCELLED -> {
                 // Cancelled booking - show cancellation info
                 Text(
                     text = "Đặt phòng đã được hủy thành công.",
@@ -127,7 +129,7 @@ fun CancellationPolicySection(
                 )
             }
 
-            BookingStatus.COMPLETED -> {
+            RoomBookingStatus.CONFIRMED -> {
                 // Completed booking - show completion info
                 Text(
                     text = "Đặt phòng đã hoàn thành thành công.",

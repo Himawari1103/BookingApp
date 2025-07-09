@@ -18,11 +18,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.nquang.bookingapp.mainapp.data.model.booking.BookingStatus
+import com.nquang.bookingapp.model.RoomBookingStatus
 
 @Composable
-fun BookingStatusBanner(status: BookingStatus) {
+fun BookingStatusBanner(status: RoomBookingStatus) {
     val (backgroundGradient, iconBackground, statusIcon, overlayIcon, title, subtitle) = when (status) {
-        BookingStatus.WAITING_CHECKIN -> StatusConfig(
+        RoomBookingStatus.PENDING -> StatusConfig(
             backgroundGradient = Brush.horizontalGradient(
                 colors = listOf(Color(0xFFE3F2FD), Color(0xFFBBDEFB))
             ),
@@ -32,7 +33,7 @@ fun BookingStatusBanner(status: BookingStatus) {
             title = "Chờ nhận phòng",
             subtitle = "Hoàn tất đặt phòng! Đừng quên đến nhận phòng đúng giờ nhé."
         )
-        BookingStatus.COMPLETED -> StatusConfig(
+        RoomBookingStatus.CONFIRMED -> StatusConfig(
             backgroundGradient = Brush.horizontalGradient(
                 colors = listOf(Color(0xFFE8F5E8), Color(0xFFC8E6C9))
             ),
@@ -42,7 +43,7 @@ fun BookingStatusBanner(status: BookingStatus) {
             title = "Hoàn thành",
             subtitle = "Đặt phòng của bạn đã hoàn thành, hy vọng bạn đã có một trải nghiệm tuyệt vời!"
         )
-        BookingStatus.CANCELLED -> StatusConfig(
+        RoomBookingStatus.CANCELLED -> StatusConfig(
             backgroundGradient = Brush.horizontalGradient(
                 colors = listOf(Color(0xFFFFEBEE), Color(0xFFFFCDD2))
             ),

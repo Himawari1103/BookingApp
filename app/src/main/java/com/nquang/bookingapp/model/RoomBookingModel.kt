@@ -31,7 +31,7 @@ enum class RoomBookingStatus(val value: String, val color: Color) {
 }
 
 enum class RoomBookingType(val value: String) {
-    ONLY_DAY("Chỉ ngày"), // checkIn -> checkIn + 8
-    ONLY_NIGHT("Chỉ đêm"), // checkIn + 9 -> checkIn + 20
+    ONLY_DAY("Ban ngày"), // checkIn -> checkIn + 8
+    ONLY_NIGHT("Qua đêm"), // checkIn + 9 -> checkIn + 20
     FULL_DAY("Cả ngày") // checkIn -> checkOut
 }

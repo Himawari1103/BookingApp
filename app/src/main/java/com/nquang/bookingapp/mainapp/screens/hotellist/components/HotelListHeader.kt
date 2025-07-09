@@ -51,23 +51,23 @@ fun HotelListHeader(
                 )
             }
             
-            Row {
-                IconButton(onClick = { /* Handle favorite */ }) {
-                    Icon(
-                        Icons.Default.FavoriteBorder,
-                        contentDescription = "Favorites",
-                        tint = Color.Black
-                    )
-                }
-                
-                IconButton(onClick = { /* Handle menu */ }) {
-                    Icon(
-                        Icons.Default.MoreVert,
-                        contentDescription = "Menu",
-                        tint = Color.Black
-                    )
-                }
-            }
+//            Row {
+//                IconButton(onClick = { /* Handle favorite */ }) {
+//                    Icon(
+//                        Icons.Default.FavoriteBorder,
+//                        contentDescription = "Favorites",
+//                        tint = Color.Black
+//                    )
+//                }
+//
+//                IconButton(onClick = { /* Handle menu */ }) {
+//                    Icon(
+//                        Icons.Default.MoreVert,
+//                        contentDescription = "Menu",
+//                        tint = Color.Black
+//                    )
+//                }
+//            }
         }
         
         Spacer(modifier = Modifier.height(12.dp))

@@ -1,5 +1,7 @@
 package com.nquang.bookingapp.mainapp.screens.bookingdetail.components
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -14,23 +16,26 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.nquang.bookingapp.mainapp.data.model.booking.BookingItem
+import com.nquang.bookingapp.model.RoomBookingModelGet
+import com.nquang.bookingapp.utils.Utils
+import com.nquang.bookingapp.viewmodel.HotelViewModel
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun BookingScheduleSection(booking: BookingItem) {
-    val isNightBooking = booking.roomType.contains("Qua đêm")
+fun BookingScheduleSection(
+    booking: RoomBookingModelGet,
+    hotelViewModel: HotelViewModel
+) {
+//    val isNightBooking = booking.roomType.contains("Qua đêm")
 
-    val cardColor = if (isNightBooking) {
-        Color(0xFFF0F0FF) // Light purple for night
-    } else {
-        Color(0xFFFF6B35) // Orange for day
-    }
+    val cardColor = Color(0xFFFF6B35) // Orange for day
 
-    val duration = when {
-        booking.roomType.contains("Theo giờ") -> "04 giờ"
-        booking.roomType.contains("Qua đêm") -> "01 đêm"
-        booking.roomType.contains("Theo ngày") -> "01 ngày"
-        else -> "04 giờ"
-    }
+//    val duration = when {
+//        booking.roomType.contains("Theo giờ") -> "04 giờ"
+//        booking.roomType.contains("Qua đêm") -> "01 đêm"
+//        booking.roomType.contains("Theo ngày") -> "01 ngày"
+//        else -> "04 giờ"
+//    }
 
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -50,7 +55,7 @@ fun BookingScheduleSection(booking: BookingItem) {
                 modifier = Modifier.width(60.dp)
             ) {
                 Icon(
-                    if (isNightBooking) Icons.Default.Schedule else Icons.Default.AccessTime,
+                    Icons.Default.AccessTime,
                     contentDescription = "Duration",
                     tint = Color.White,
                     modifier = Modifier.size(24.dp)
@@ -59,7 +64,7 @@ fun BookingScheduleSection(booking: BookingItem) {
                 Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
-                    text = duration,
+                    text = booking.type.value,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White
@@ -80,7 +85,7 @@ fun BookingScheduleSection(booking: BookingItem) {
                 )
 
                 Text(
-                    text = "08:00 • 09/02/2026",
+                    text = Utils.localDateTimeToStringWithTime(booking.checkInDateTime)!!,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Medium,
                     color = Color.White
@@ -96,7 +101,7 @@ fun BookingScheduleSection(booking: BookingItem) {
                 )
 
                 Text(
-                    text = "12:00 • 09/02/2026",
+                    text = Utils.localDateTimeToStringWithTime(booking.checkOutDateTime)!!,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Medium,
                     color = Color.White

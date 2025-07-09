@@ -1,5 +1,7 @@
 package com.nquang.bookingapp.mainapp.screens.bookingdetail.components
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -18,13 +20,20 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.nquang.bookingapp.mainapp.data.model.booking.BookingItem
+import com.nquang.bookingapp.model.RoomBookingModelGet
+import com.nquang.bookingapp.viewmodel.HotelViewModel
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun HotelSelectionSection(
-    booking: BookingItem,
-    onHotelClick: () -> Unit
+    booking: RoomBookingModelGet,
+    onHotelClick: () -> Unit,
+    hotelViewModel: HotelViewModel
 ) {
+    val roomModel = hotelViewModel.roomModels.find { it?.id == booking.roomId }
+    val hotelModel = hotelViewModel.hotelModels.find { it?.id == roomModel?.hotelId }
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -60,8 +69,8 @@ fun HotelSelectionSection(
             verticalAlignment = Alignment.CenterVertically
         ) {
             // Hotel image
-            Image(
-                painter = painterResource(id = booking.hotelImage),
+            AsyncImage(
+                model = hotelModel!!.thumbnailImages?.get(0),
                 contentDescription = "Hotel image",
                 modifier = Modifier
                     .size(80.dp)
@@ -76,7 +85,7 @@ fun HotelSelectionSection(
                 modifier = Modifier.weight(1f)
             ) {
                 Text(
-                    text = booking.hotelName,
+                    text = hotelModel.name,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black
@@ -85,7 +94,7 @@ fun HotelSelectionSection(
                 Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
-                    text = booking.roomType.split(" | ").getOrNull(1) ?: booking.roomType,
+                    text = roomModel!!.hotelId + roomModel.id + " | " + roomModel.type,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Medium,
                     color = Color.Black
