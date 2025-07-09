@@ -6,18 +6,23 @@ import com.example.mainapp.data.model.hotellist.HotelSortType
 import com.example.mainapp.data.model.hotellist.HotelListMockData
 
 object HotelListRepository {
+    // Mutable list để có thể update favorite status
+    private val _hotels = HotelListMockData.hotels.toMutableList()
 
     fun getAllHotels(): List<HotelItem> {
-        return HotelListMockData.hotels
+        return _hotels
+    }
+
+    fun getFavoriteHotels(): List<HotelItem> {
+        return _hotels.filter { it.isFavorite }
     }
 
     fun searchHotels(query: String): List<HotelItem> {
         if (query.isBlank()) return getAllHotels()
-
-        return HotelListMockData.hotels.filter { hotel ->
+        return _hotels.filter { hotel ->
             hotel.name.contains(query, ignoreCase = true) ||
-            hotel.location.contains(query, ignoreCase = true) ||
-            hotel.amenities.any { it.contains(query, ignoreCase = true) }
+                    hotel.location.contains(query, ignoreCase = true) ||
+                    hotel.amenities.any { it.contains(query, ignoreCase = true) }
         }
     }
 
@@ -61,9 +66,13 @@ object HotelListRepository {
     }
 
     fun toggleFavorite(hotelId: String): HotelItem? {
-        // In a real app, this would update the database
-        return HotelListMockData.hotels.find { it.id == hotelId }?.copy(
-            isFavorite = !HotelListMockData.hotels.find { it.id == hotelId }!!.isFavorite
-        )
+        val hotelIndex = _hotels.indexOfFirst { it.id == hotelId }
+        if (hotelIndex != -1) {
+            val hotel = _hotels[hotelIndex]
+            val updatedHotel = hotel.copy(isFavorite = !hotel.isFavorite)
+            _hotels[hotelIndex] = updatedHotel
+            return updatedHotel
+        }
+        return null
     }
 }

@@ -80,6 +80,7 @@ fun HomeScreen(navController: NavController) {
 
         // Sticky Search Bar at the top with proper spacing from top
         SearchBarComponent(
+            navController = navController,
             modifier = Modifier
                 .align(Alignment.TopCenter)
                 .padding(top = 40.dp) // Space for phone status (time, battery, signal)

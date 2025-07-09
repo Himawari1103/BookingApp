@@ -18,6 +18,7 @@ import com.example.mainapp.screens.home.HomeScreen
 import com.example.mainapp.screens.home.components.BottomNavigationComponent
 import com.example.mainapp.screens.hoteldetail.HotelDetailScreen
 import com.example.mainapp.screens.hotellist.HotelListScreen
+import com.example.mainapp.screens.favorites.FavoritesScreen
 import com.example.mainapp.screens.payment.PaymentScreen
 import com.example.mainapp.screens.payment.PaymentMethodScreen
 import com.example.mainapp.screens.reviews.ReviewsScreen
@@ -53,9 +54,18 @@ fun AppNavigation() {
             AccountScreen(navController = navController)
         }
 
+        // Màn hình yêu thích
+        composable("favorites") {
+            FavoritesScreen(navController = navController)
+        }
+
         // Màn hình danh sách khách sạn
-        composable("hotel_list") {
-            HotelListScreen(navController = navController)
+        composable("hotel_list/{destination}") { backStackEntry ->
+            val destination = backStackEntry.arguments?.getString("destination") ?: "Việt Nam"
+            HotelListScreen(
+                navController = navController,
+                destination = destination
+            )
         }
 
         // Màn hình chi tiết khách sạn

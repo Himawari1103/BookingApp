@@ -27,7 +27,8 @@ object HotelListMockData {
             originalPrice = "4,500,000",
             imageRes = R.drawable.hotel2,
             amenities = listOf("Wi-Fi miễn phí", "Hồ bơi", "Spa", "Bar"),
-            distance = "1.5km từ trung tâm"
+            distance = "1.5km từ trung tâm",
+            isFavorite = false
         ),
         HotelItem(
             id = "3",
@@ -38,7 +39,8 @@ object HotelListMockData {
             price = "4,200,000",
             imageRes = R.drawable.hotel3,
             amenities = listOf("Bãi biển riêng", "Spa", "Nhà hàng", "Hồ bơi"),
-            distance = "5km từ sân bay"
+            distance = "5km từ sân bay",
+            isFavorite = true
         ),
         HotelItem(
             id = "4",
@@ -50,7 +52,8 @@ object HotelListMockData {
             originalPrice = "6,800,000",
             imageRes = R.drawable.hotel4,
             amenities = listOf("Resort biển", "Spa", "Golf", "Nhà hàng"),
-            distance = "Bãi biển Ong Lang"
+            distance = "Bãi biển Ong Lang",
+            isFavorite = true
         ),
         HotelItem(
             id = "5",
@@ -61,7 +64,8 @@ object HotelListMockData {
             price = "6,200,000",
             imageRes = R.drawable.hotel5,
             amenities = listOf("Luxury", "Spa", "Rooftop bar", "Concierge"),
-            distance = "0.5km từ trung tâm"
+            distance = "0.5km từ trung tâm",
+            isFavorite = true
         ),
         HotelItem(
             id = "6",
@@ -73,7 +77,8 @@ object HotelListMockData {
             originalPrice = "3,500,000",
             imageRes = R.drawable.hotel6,
             amenities = listOf("Wi-Fi", "Fitness center", "Restaurant", "Bar"),
-            distance = "1km từ Hồ Gươm"
+            distance = "1km từ Hồ Gươm",
+            isFavorite = true
         ),
         HotelItem(
             id = "7",
@@ -84,7 +89,8 @@ object HotelListMockData {
             price = "3,900,000",
             imageRes = R.drawable.hotel7,
             amenities = listOf("All-inclusive spa", "Beachfront", "Pool", "Restaurant"),
-            distance = "Bãi biển Nha Trang"
+            distance = "Bãi biển Nha Trang",
+            isFavorite = false
         ),
         HotelItem(
             id = "8",
@@ -96,7 +102,8 @@ object HotelListMockData {
             originalPrice = "5,600,000",
             imageRes = R.drawable.hotel8,
             amenities = listOf("Riverside", "Spa", "Cultural tours", "Fine dining"),
-            distance = "2km từ phố cổ"
+            distance = "2km từ phố cổ",
+            isFavorite = false
         ),
         HotelItem(
             id = "9",
@@ -107,7 +114,8 @@ object HotelListMockData {
             price = "3,200,000",
             imageRes = R.drawable.hotel9,
             amenities = listOf("Golf course", "Spa", "Adventure park", "Restaurant"),
-            distance = "5km từ trung tâm"
+            distance = "5km từ trung tâm",
+            isFavorite = false
         ),
         HotelItem(
             id = "10",
@@ -119,7 +127,8 @@ object HotelListMockData {
             originalPrice = "2,800,000",
             imageRes = R.drawable.hotel10,
             amenities = listOf("Beachfront", "Pool", "Spa", "Restaurant"),
-            distance = "Bãi biển Thùy Vân"
+            distance = "Bãi biển Thùy Vân",
+            isFavorite = false
         ),
         HotelItem(
             id = "11",
@@ -130,7 +139,8 @@ object HotelListMockData {
             price = "7,500,000",
             imageRes = R.drawable.hotel11,
             amenities = listOf("Historic luxury", "Spa", "Fine dining", "Opera house"),
-            distance = "0.3km từ Hồ Gươm"
+            distance = "0.3km từ Hồ Gươm",
+            isFavorite = false
         ),
         HotelItem(
             id = "12",
@@ -142,7 +152,8 @@ object HotelListMockData {
             originalPrice = "7,200,000",
             imageRes = R.drawable.hotel12,
             amenities = listOf("Beachfront villas", "Spa", "Golf", "Private beach"),
-            distance = "Bãi biển Lăng Cô"
+            distance = "Bãi biển Lăng Cô",
+            isFavorite = false
         ),
         HotelItem(
             id = "13",
@@ -153,7 +164,8 @@ object HotelListMockData {
             price = "2,900,000",
             imageRes = R.drawable.hotel13,
             amenities = listOf("Mountain view", "Spa", "Hiking", "Restaurant"),
-            distance = "45km từ Hà Nội"
+            distance = "45km từ Hà Nội",
+            isFavorite = false
         ),
         HotelItem(
             id = "14",
@@ -165,7 +177,8 @@ object HotelListMockData {
             originalPrice = "4,200,000",
             imageRes = R.drawable.hotel14,
             amenities = listOf("Beachfront", "Water sports", "Spa", "Kids club"),
-            distance = "Bãi biển Mỹ Khê"
+            distance = "Bãi biển Mỹ Khê",
+            isFavorite = false
         ),
         HotelItem(
             id = "15",
@@ -176,7 +189,8 @@ object HotelListMockData {
             price = "1,800,000",
             imageRes = R.drawable.hotel15,
             amenities = listOf("Historic", "Rooftop bar", "Central location", "Restaurant"),
-            distance = "0.2km từ Nhà hát TP"
+            distance = "0.2km từ Nhà hát TP",
+            isFavorite = true
         )
     )
 }

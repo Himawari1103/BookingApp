@@ -13,10 +13,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchBarComponent(modifier: Modifier = Modifier) {
+fun SearchBarComponent(
+    navController: NavController,
+    modifier: Modifier = Modifier
+) {
     Surface(
         modifier = modifier.fillMaxWidth(),
         color = Color(0xFFFF9A56),
@@ -59,7 +63,9 @@ fun SearchBarComponent(modifier: Modifier = Modifier) {
                 tint = Color.Black,
                 modifier = Modifier
                     .size(24.dp)
-                    .clickable { }
+                    .clickable {
+                        navController.navigate("favorites")
+                    }
             )
 
             Icon(
