@@ -1,5 +1,7 @@
 package com.nquang.bookingapp.mainapp.screens.bookings
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -11,33 +13,40 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
-import com.nquang.bookingapp.mainapp.data.model.booking.BookingItem
-import com.nquang.bookingapp.mainapp.data.model.booking.BookingStatus
-import com.nquang.bookingapp.mainapp.data.repository.BookingRepository
 import com.nquang.bookingapp.mainapp.screens.bookings.components.BookingCard
 import com.nquang.bookingapp.mainapp.screens.bookings.components.BookingHeader
 import com.nquang.bookingapp.mainapp.screens.bookings.components.BookingMenuDialog
 import com.nquang.bookingapp.mainapp.screens.bookings.components.BookingStatusTabs
 import com.nquang.bookingapp.mainapp.screens.home.components.BottomNavigationComponent
+import com.nquang.bookingapp.model.RoomBookingModelGet
+import com.nquang.bookingapp.model.RoomBookingModelSet
+import com.nquang.bookingapp.model.RoomBookingStatus
+import com.nquang.bookingapp.utils.FirebaseUtils
+import com.nquang.bookingapp.utils.Utils
+import com.nquang.bookingapp.viewmodel.HotelViewModel
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BookingsScreen(navController: NavController) {
-    var selectedStatus by remember { mutableStateOf<BookingStatus?>(null) }
+fun BookingsScreen(
+    navController: NavController,
+    hotelViewModel: HotelViewModel
+) {
+    var selectedStatus by remember { mutableStateOf<RoomBookingStatus?>(null) }
     var showMenuDialog by remember { mutableStateOf(false) }
-    var selectedBooking by remember { mutableStateOf<BookingItem?>(null) }
+    var selectedBooking by remember { mutableStateOf<RoomBookingModelGet?>(null) }
 
     // Get all bookings and calculate counts
-    val allBookings = BookingRepository.getAllBookings()
-    val bookingCounts = BookingStatus.values().associateWith { status ->
-        allBookings.count { it.status == status }
+    val allBookings = hotelViewModel.roomBookingModels
+    val bookingCounts = RoomBookingStatus.entries.associateWith { status ->
+        allBookings.count { it?.status == status }
     }
 
     // Filter bookings based on selected status
     val filteredBookings = if (selectedStatus == null) {
         allBookings
     } else {
-        allBookings.filter { it.status == selectedStatus }
+        allBookings.filter { it?.status == selectedStatus }
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -82,7 +91,7 @@ fun BookingsScreen(navController: NavController) {
                 } else {
                     items(filteredBookings) { booking ->
                         BookingCard(
-                            booking = booking,
+                            booking = booking!!,
                             onMenuClick = {
                                 selectedBooking = it
                                 showMenuDialog = true
@@ -90,7 +99,9 @@ fun BookingsScreen(navController: NavController) {
                             onCardClick = { booking ->
                                 // Navigate to booking detail
                                 navController.navigate("booking_detail/${booking.id}")
-                            }
+                            },
+                            hotelViewModel = hotelViewModel,
+
                         )
                     }
                 }
@@ -118,12 +129,29 @@ fun BookingsScreen(navController: NavController) {
                 },
                 onDelete = { booking ->
                     // Handle delete
-                    BookingRepository.deleteBooking(booking.id)
+//                    BookingRepository.deleteBooking(booking.id)
+                    hotelViewModel.roomBookingModels.removeIf { it?.id == booking.id }
+                    FirebaseUtils.removeRoomBookingById(booking.id)
                     // Show success message or refresh list
                 },
-                onReportError = { booking ->
+                onCancel = { booking ->
                     // Handle report error
-                    BookingRepository.reportError(booking.id)
+                    val roomBookingModel = hotelViewModel.roomBookingModels.filter { it?.id == booking.id }[0]?.copy(status = RoomBookingStatus.CANCELLED)
+                    hotelViewModel.roomBookingModels.removeIf { it?.id == booking.id }
+                    hotelViewModel.roomBookingModels.add(roomBookingModel)
+                    if (roomBookingModel != null) {
+                        FirebaseUtils.saveRoomBooking(
+                            RoomBookingModelSet(
+                                id = roomBookingModel.id,
+                                checkInDateTime = Utils.localDateTimeToStringWithTime(roomBookingModel.checkInDateTime)!!,
+                                checkOutDateTime = Utils.localDateTimeToStringWithTime(roomBookingModel.checkOutDateTime)!!,
+                                status = roomBookingModel.status,
+                                type = roomBookingModel.type,
+                                roomId = roomBookingModel.roomId,
+                                userId = roomBookingModel.userId,
+                            )
+                        )
+                    }
                     // Show success message
                 }
             )

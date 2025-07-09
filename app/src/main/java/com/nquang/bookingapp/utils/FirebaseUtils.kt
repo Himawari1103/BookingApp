@@ -16,6 +16,7 @@ import com.nquang.bookingapp.model.RoomBookingType
 import com.nquang.bookingapp.model.RoomModelGet
 import com.nquang.bookingapp.model.RoomType
 import com.nquang.bookingapp.model.UserModel
+import com.nquang.bookingapp.model.EndpointFirebase
 import kotlinx.coroutines.tasks.await
 import java.time.LocalTime
 
@@ -231,6 +232,125 @@ class FirebaseUtils {
             }
         }
 
+        @RequiresApi(Build.VERSION_CODES.O)
+        suspend fun findAllRoomBooking(): List<RoomBookingModelGet> {
+            return try {
+                val query = database.reference.child(EndpointFirebase.ROOM_BOOKINGS.value)
+                    .get()
+                    .await()
+                val roomBooking: List<RoomBookingModelGet> = query.children.mapNotNull { snapshot ->
+                    Log.d("FindRoomBooking Debug", "Found roomBooking key: ${snapshot.key}")
+                    val id = snapshot.key ?: ""
+                    val userId = snapshot.child("userId").getValue(String::class.java)
+                    val roomId = snapshot.child("roomId").getValue(String::class.java)
+                    val checkInDate = Utils.stringToLocalDateTimeWithTime(
+                        snapshot.child("checkInDateTime").getValue(String::class.java)
+                    )
+                    val checkOutDate = Utils.stringToLocalDateTimeWithTime(
+                        snapshot.child("checkOutDateTime").getValue(String::class.java)
+                    )
+                    val status = RoomBookingStatus.valueOf(
+                        snapshot.child("status").getValue(String::class.java)!!
+                    )
+                    val type = RoomBookingType.valueOf(
+                        snapshot.child("type").getValue(String::class.java)!!
+                    )
+                    RoomBookingModelGet(
+                        id,
+                        userId!!,
+                        roomId!!,
+                        checkInDate!!,
+                        checkOutDate!!,
+                        status,
+                        type
+                    )
+                }
+                Log.d("FindAllRoomBooking Debug", "Found ${roomBooking.size} roomBookings")
+                roomBooking
+            } catch (e: Exception) {
+                Log.e("FindAllRoomBooking Error", "Error finding all hotels: ${e.message}")
+                emptyList()
+            }
+        }
+
+        @RequiresApi(Build.VERSION_CODES.O)
+        suspend fun findAllRoom(): List<RoomModelGet> {
+            return try {
+                val query = database.reference.child(EndpointFirebase.ROOMS.value)
+                    .get()
+                    .await()
+                val roomList: List<RoomModelGet> = query.children.mapNotNull { snapshot ->
+                    Log.d("FindAllHotel Debug", "Found hotel key: ${snapshot.key}")
+                    val id = snapshot.key ?: ""
+                    val hotelId = snapshot.child("hotelId").getValue(String::class.java)
+                    val type =
+                        RoomType.valueOf(snapshot.child("type").getValue(String::class.java)!!)
+                    val price = snapshot.child("price").getValue(Int::class.java)
+                    val discount = snapshot.child("discount").getValue(Float::class.java)
+                    val thumbnailImages = snapshot.child("thumbnailImages")
+                        .getValue(object : GenericTypeIndicator<List<String>>() {})
+                    val bookingIdList = snapshot.child("bookingList")
+                        .getValue(object : GenericTypeIndicator<List<String>>() {})
+
+                    val bookingList = mutableListOf<RoomBookingModelGet>()
+                    if (bookingIdList != null) {
+                        for (bookingId in bookingIdList) {
+                            val booking = findRoomBookingById(bookingId)
+                            if (booking != null) {
+                                bookingList.add(booking)
+                                Log.d("FindRoomById Debug", "Found booking: $booking")
+                            }
+                        }
+                    }
+
+                    RoomModelGet(
+                        id,
+                        hotelId!!,
+                        type,
+                        price!!,
+                        discount!!,
+                        thumbnailImages,
+                        bookingList
+                    )
+                }
+                Log.d("FindAllRoom Debug", "Found ${roomList.size} rooms")
+                roomList
+            } catch (e: Exception) {
+                Log.e("FindAllRoom Error", "Error finding all rooms: ${e.message}")
+                emptyList()
+            }
+        }
+
+        @RequiresApi(Build.VERSION_CODES.O)
+        suspend fun findAllFavouriteHotel(): List<FavouriteHotelModel> {
+            return try {
+                val query = database.reference.child(EndpointFirebase.FAVOURITE_HOTELS.value)
+                    .get()
+                    .await()
+                val favouriteHotelList: List<FavouriteHotelModel> =
+                    query.children.mapNotNull { snapshot ->
+                        Log.d(
+                            "FindFavouriteHotel Debug",
+                            "Found favouriteHotel key: ${snapshot.key}"
+                        )
+                        val id = snapshot.key ?: ""
+                        val userId = snapshot.child("userId").getValue(String::class.java)
+                        val hotelId = snapshot.child("hotelId").getValue(String::class.java)
+
+                        FavouriteHotelModel(
+                            id = id,
+                            userId = userId!!,
+                            hotelId = hotelId!!,
+                        )
+                    }
+                Log.d("FindAllRoomBooking Debug", "Found ${favouriteHotelList.size} roomBookings")
+                favouriteHotelList
+            } catch (e: Exception) {
+                Log.e("FindAllRoomBooking Error", "Error finding all hotels: ${e.message}")
+                emptyList()
+            }
+        }
+
         fun saveUserdata(userModel: UserModel) {
             //chèn dữ liệu vào database
             database.getReference().child("users").child(userModel.uid).setValue(userModel)
@@ -261,6 +381,17 @@ class FirebaseUtils {
                 }
                 .addOnFailureListener { exception ->
                     Log.d("saveFavouriteHotel", "Failure", exception)
+                }
+        }
+
+        fun removeRoomBookingById(id: String) {
+            database.getReference().child(EndpointFirebase.ROOM_BOOKINGS.value).child(id)
+                .removeValue()
+                .addOnSuccessListener {
+                    Log.d("removeRoomBookingById", "Success")
+                }
+                .addOnFailureListener { exception ->
+                    Log.d("removeRoomBookingById", "Failure", exception)
                 }
         }
 

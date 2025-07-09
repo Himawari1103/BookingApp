@@ -1,5 +1,6 @@
 package com.nquang.bookingapp.model
 
+import androidx.compose.ui.graphics.Color
 import java.time.LocalDateTime
 
 data class RoomBookingModelGet( // n-n user-room
@@ -23,14 +24,14 @@ data class RoomBookingModelSet( // n-n user-room
 )
 
 
-enum class RoomBookingStatus {
-    PENDING,
-    CONFIRMED,
-    CANCELLED
+enum class RoomBookingStatus(val value: String, val color: Color) {
+    PENDING("Chờ nhận phòng", Color(0xFF2196F3)),
+    CONFIRMED("Hoàn thành", Color(0xFF4CAF50)),
+    CANCELLED("Đã hủy", Color(0xFF9E9E9E))
 }
 
-enum class RoomBookingType {
-    ONLY_DAY,
-    ONLY_NIGHT,
-    FULL_DAY
+enum class RoomBookingType(val value: String) {
+    ONLY_DAY("Chỉ ngày"), // checkIn -> checkIn + 8
+    ONLY_NIGHT("Chỉ đêm"), // checkIn + 9 -> checkIn + 20
+    FULL_DAY("Cả ngày") // checkIn -> checkOut
 }

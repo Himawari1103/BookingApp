@@ -1,5 +1,7 @@
 package com.nquang.bookingapp.mainapp.screens.hotellist
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -12,18 +14,25 @@ import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import com.nquang.bookingapp.mainapp.data.repository.HotelListRepository
 import com.nquang.bookingapp.mainapp.screens.hotellist.components.*
+import com.nquang.bookingapp.viewmodel.HotelViewModel
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HotelListScreen(navController: NavController, destination: String = "Việt Nam") {
+fun HotelListScreen(
+    navController: NavController, destination: String = "Việt Nam",
+    hotelViewModel: HotelViewModel
+) {
     var searchQuery by remember { mutableStateOf("") }
     var showFilterDialog by remember { mutableStateOf(false) }
-    
+
     val hotels = remember(searchQuery) {
         if (searchQuery.isBlank()) {
-            HotelListRepository.getAllHotels()
+            hotelViewModel.hotelModels
         } else {
-            HotelListRepository.searchHotels(searchQuery)
+            hotelViewModel.hotelModels.filter { hotel ->
+                hotel!!.name.contains(searchQuery, ignoreCase = true)
+            }
         }
     }
 
@@ -40,17 +49,18 @@ fun HotelListScreen(navController: NavController, destination: String = "Việt 
                     onFilterClick = { showFilterDialog = true }
                 )
             }
-            
+
             // Hotel cards
             items(hotels) { hotel ->
                 HotelCard(
-                    hotel = hotel,
-                    onHotelClick = { 
+                    hotel = hotel!!,
+                    onHotelClick = {
                         navController.navigate("hotel_detail/${hotel.id}")
                     },
-                    onFavoriteClick = { 
+                    onFavoriteClick = {
                         // Handle favorite toggle
-                    }
+                    },
+                    hotelViewModel = hotelViewModel
                 )
                 Spacer(modifier = Modifier.height(12.dp))
             }
@@ -70,7 +80,7 @@ fun HotelListScreen(navController: NavController, destination: String = "Việt 
                         .fillMaxWidth()
                         .statusBarsPadding()
                 )
-                
+
                 HotelListHeader(
                     destination = destination,
                     searchQuery = searchQuery,

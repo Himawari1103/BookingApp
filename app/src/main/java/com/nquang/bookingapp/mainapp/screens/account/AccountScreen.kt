@@ -13,6 +13,7 @@ import androidx.navigation.NavController
 import com.nquang.bookingapp.mainapp.data.repository.AccountRepository
 import com.nquang.bookingapp.mainapp.screens.account.components.*
 import com.nquang.bookingapp.mainapp.screens.home.components.BottomNavigationComponent
+import com.nquang.bookingapp.viewmodel.HotelViewModel
 import com.nquang.bookingapp.viewmodel.UserViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -20,11 +21,12 @@ import com.nquang.bookingapp.viewmodel.UserViewModel
 fun AccountScreen(
     navController: NavController,
     userViewModel: UserViewModel,
-    onLogout: () -> Unit
+    onLogout: () -> Unit,
+    hotelViewModel: HotelViewModel,
 ) {
 //    val user = AccountRepository.getCurrentUser()
     val userModel = userViewModel.userModel.value
-    if(userModel == null){
+    if (userModel == null) {
         Log.d("AccountScreen", "User model is null")
         return
     }

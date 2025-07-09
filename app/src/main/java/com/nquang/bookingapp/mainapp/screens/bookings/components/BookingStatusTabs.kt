@@ -13,18 +13,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.nquang.bookingapp.mainapp.data.model.booking.BookingStatus
+import com.nquang.bookingapp.model.RoomBookingStatus
 
 @Composable
 fun BookingStatusTabs(
-    selectedStatus: BookingStatus?,
-    onStatusSelected: (BookingStatus?) -> Unit,
-    bookingCounts: Map<BookingStatus, Int>
+    selectedStatus: RoomBookingStatus?,
+    onStatusSelected: (RoomBookingStatus?) -> Unit,
+    bookingCounts: Map<RoomBookingStatus, Int>
 ) {
     val tabs = listOf(
         null to "Tất cả",
-        BookingStatus.WAITING_CHECKIN to "Chờ nhận phòng",
-        BookingStatus.COMPLETED to "Hoàn thành", 
-        BookingStatus.CANCELLED to "Đã hủy"
+        RoomBookingStatus.PENDING to "Chờ nhận phòng",
+        RoomBookingStatus.CONFIRMED to "Hoàn thành",
+        RoomBookingStatus.CANCELLED to "Đã hủy"
     )
     
     Surface(

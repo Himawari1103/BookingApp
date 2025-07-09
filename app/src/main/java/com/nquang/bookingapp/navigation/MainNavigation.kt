@@ -72,7 +72,10 @@ fun MainNavigation(
         }
 
         composable("bookings") {
-            BookingsScreen(navController = navController)
+            BookingsScreen(
+                navController = navController,
+                hotelViewModel = hotelViewModel
+            )
         }
 
         composable("account") {
@@ -95,13 +98,17 @@ fun MainNavigation(
             AccountScreen(
                 navController = navController,
                 onLogout = { onLogout() },
-                userViewModel = userViewModel
+                userViewModel = userViewModel,
+                hotelViewModel = hotelViewModel,
             )
         }
 
         // Màn hình danh sách khách sạn
         composable("hotel_list") {
-            HotelListScreen(navController = navController)
+            HotelListScreen(
+                navController = navController,
+                hotelViewModel = hotelViewModel
+            )
         }
 
         // Màn hình chi tiết khách sạn
@@ -134,11 +141,13 @@ fun MainNavigation(
         }
 
         // Màn hình thanh toán
-        composable("payment/{roomId}") { backStackEntry ->
-            val roomId = backStackEntry.arguments?.getString("roomId") ?: ""
+        composable("payment/{hotelId}") { backStackEntry ->
+            val hotelId = backStackEntry.arguments?.getString("hotelId") ?: ""
             PaymentScreen(
                 navController = navController,
-                roomId = roomId
+                hotelId = hotelId,
+                hotelViewModel = hotelViewModel,
+                userViewModel = userViewModel,
             )
         }
 

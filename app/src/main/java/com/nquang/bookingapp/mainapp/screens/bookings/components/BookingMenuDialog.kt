@@ -4,8 +4,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -16,14 +16,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import com.nquang.bookingapp.mainapp.data.model.booking.BookingItem
+import com.nquang.bookingapp.model.RoomBookingModelGet
 
 @Composable
 fun BookingMenuDialog(
-    booking: BookingItem,
+    booking: RoomBookingModelGet,
     onDismiss: () -> Unit,
-    onDelete: (BookingItem) -> Unit,
-    onReportError: (BookingItem) -> Unit
+    onDelete: (RoomBookingModelGet) -> Unit,
+    onCancel: (RoomBookingModelGet) -> Unit
 ) {
     Dialog(onDismissRequest = onDismiss) {
         Card(
@@ -43,15 +43,15 @@ fun BookingMenuDialog(
                         onDismiss()
                     }
                 )
-                
+
                 Spacer(modifier = Modifier.height(8.dp))
-                
+
                 // Report error option
                 MenuOption(
-                    icon = Icons.Default.Info,
-                    text = "Báo cáo lỗi",
+                    icon = Icons.Default.Cancel,
+                    text = "Hủy",
                     onClick = {
-                        onReportError(booking)
+                        onCancel(booking)
                         onDismiss()
                     }
                 )

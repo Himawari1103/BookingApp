@@ -21,16 +21,20 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.nquang.bookingapp.mainapp.data.model.hotellist.HotelItem
+import com.nquang.bookingapp.model.HotelModelGet
+import com.nquang.bookingapp.model.RoomModelGet
+import com.nquang.bookingapp.viewmodel.HotelViewModel
 
 @Composable
 fun HotelCard(
-    hotel: HotelItem,
+    hotel: HotelModelGet,
     onHotelClick: () -> Unit,
-    onFavoriteClick: () -> Unit
+    onFavoriteClick: () -> Unit,
+    hotelViewModel: HotelViewModel
 ) {
-    var isFavorite by remember { mutableStateOf(hotel.isFavorite) }
-
+//    var isFavorite by remember { mutableStateOf(hotel.isFavorite) }
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -43,8 +47,8 @@ fun HotelCard(
         Column {
             // Image with favorite button
             Box {
-                Image(
-                    painter = painterResource(id = hotel.imageRes),
+                AsyncImage(
+                    model = hotel.thumbnailImages?.get(0),
                     contentDescription = hotel.name,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -54,22 +58,22 @@ fun HotelCard(
                 )
 
                 // Favorite button
-                IconButton(
-                    onClick = {
-                        isFavorite = !isFavorite
-                        onFavoriteClick()
-                    },
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .padding(8.dp)
-                ) {
-                    Icon(
-                        if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                        contentDescription = "Favorite",
-                        tint = if (isFavorite) Color.Red else Color.White,
-                        modifier = Modifier.size(24.dp)
-                    )
-                }
+//                IconButton(
+//                    onClick = {
+//                        isFavorite = !isFavorite
+//                        onFavoriteClick()
+//                    },
+//                    modifier = Modifier
+//                        .align(Alignment.TopEnd)
+//                        .padding(8.dp)
+//                ) {
+//                    Icon(
+//                        if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+//                        contentDescription = "Favorite",
+//                        tint = if (isFavorite) Color.Red else Color.White,
+//                        modifier = Modifier.size(24.dp)
+//                    )
+//                }
             }
 
             // Hotel info
@@ -78,7 +82,7 @@ fun HotelCard(
             ) {
                 // Location
                 Text(
-                    text = hotel.location,
+                    text = hotel.address,
                     fontSize = 12.sp,
                     color = Color.Gray,
                     fontWeight = FontWeight.Medium
@@ -121,18 +125,18 @@ fun HotelCard(
                         fontSize = 12.sp,
                         color = Color.Gray
                     )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = "• ${hotel.distance}",
-                        fontSize = 12.sp,
-                        color = Color.Gray
-                    )
+//                    Spacer(modifier = Modifier.width(8.dp))
+//                    Text(
+//                        text = "• ${hotel.distance}",
+//                        fontSize = 12.sp,
+//                        color = Color.Gray
+//                    )
                 }
 
                 Spacer(modifier = Modifier.height(8.dp))
 
                 // Amenities
-                if (hotel.amenities.isNotEmpty()) {
+                if (hotel.amenities != null) {
                     Text(
                         text = hotel.amenities.take(3).joinToString(" • "),
                         fontSize = 12.sp,
@@ -151,16 +155,8 @@ fun HotelCard(
                     verticalAlignment = Alignment.Bottom
                 ) {
                     Column {
-                        if (hotel.originalPrice != null) {
-                            Text(
-                                text = "đ ${hotel.originalPrice}",
-                                fontSize = 12.sp,
-                                color = Color.Gray,
-                                textDecoration = TextDecoration.LineThrough
-                            )
-                        }
                         Text(
-                            text = "đ ${hotel.price}",
+                            text = "đ ${hotel.roomList[0].price}",
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold,
                             color = Color.Black

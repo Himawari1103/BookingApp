@@ -102,7 +102,8 @@ fun PaymentBottomBar(
                     elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp)
                 ) {
                     Text(
-                        text = if (selectedPaymentMethod != null) "Thanh toán" else "Đặt phòng",
+//                        text = if (selectedPaymentMethod != null) "Thanh toán" else "Đặt phòng",
+                        text = "Xác nhận",
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Medium,
                         color = Color.White

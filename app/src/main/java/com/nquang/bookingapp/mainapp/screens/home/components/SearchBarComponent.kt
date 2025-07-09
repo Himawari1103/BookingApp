@@ -53,14 +53,14 @@ fun SearchBarComponent(modifier: Modifier = Modifier) {
                 textStyle = TextStyle(fontSize = 14.sp)
             )
 
-            Icon(
-                Icons.Default.Favorite,
-                contentDescription = "Favorites",
-                tint = Color.Black,
-                modifier = Modifier
-                    .size(24.dp)
-                    .clickable { }
-            )
+//            Icon(
+//                Icons.Default.Favorite,
+//                contentDescription = "Favorites",
+//                tint = Color.Black,
+//                modifier = Modifier
+//                    .size(24.dp)
+//                    .clickable { }
+//            )
 
             Icon(
                 Icons.Default.Notifications,

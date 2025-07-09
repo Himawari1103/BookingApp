@@ -1,5 +1,7 @@
 package com.nquang.bookingapp.mainapp.screens.roomlist
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -12,8 +14,10 @@ import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import com.nquang.bookingapp.mainapp.data.repository.HotelRepository
 import com.nquang.bookingapp.mainapp.screens.roomlist.components.*
+import com.nquang.bookingapp.model.HotelModelGet
 import com.nquang.bookingapp.viewmodel.HotelViewModel
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RoomListScreen(
@@ -21,8 +25,16 @@ fun RoomListScreen(
     hotelId: String,
     hotelViewModel: HotelViewModel
 ) {
-    val hotel = HotelRepository.getHotelById(hotelId)
     val scrollState = rememberScrollState()
+
+    var hotelModel: HotelModelGet? = null
+    for (hotel in hotelViewModel.hotelModels) {
+        if(hotel!!.id == hotelId){
+            hotelModel = hotel
+            break;
+        }
+    }
+    hotelModel!!
 
     // Track when to show sticky header
     val showStickyHeader by remember {
@@ -42,12 +54,19 @@ fun RoomListScreen(
             Spacer(modifier = Modifier.height(56.dp))
 
             // Booking schedule card with spacing from header
-            BookingScheduleCard()
+            BookingScheduleCard(
+                hotelViewModel = hotelViewModel,
+                hotelModel = hotelModel,
+            )
 
             Spacer(modifier = Modifier.height(24.dp))
 
             // Room list content
-            RoomListContent(navController)
+            RoomListContent(
+                navController = navController,
+                hotelModel = hotelModel,
+                hotelViewModel = hotelViewModel
+            )
         }
 
         // Sticky header with enhanced shadow when scrolled

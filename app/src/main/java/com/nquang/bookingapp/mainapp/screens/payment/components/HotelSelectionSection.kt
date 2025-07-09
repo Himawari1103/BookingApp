@@ -1,5 +1,7 @@
 package com.nquang.bookingapp.mainapp.screens.payment.components
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -15,11 +17,29 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.nquang.bookingapp.mainapp.data.model.payment.BookingInfo
 import com.nquang.bookingapp.R
+import com.nquang.bookingapp.model.HotelModelGet
+import com.nquang.bookingapp.model.RoomModelGet
+import com.nquang.bookingapp.viewmodel.HotelViewModel
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun HotelSelectionSection(bookingInfo: BookingInfo) {
+fun HotelSelectionSection(
+//    bookingInfo: BookingInfo
+    hotelModel: HotelModelGet,
+    hotelViewModel: HotelViewModel
+) {
+    val roomId = hotelViewModel.newRoomBookingModel.value!!.roomId
+    var roomModel: RoomModelGet? = null
+    for (room in hotelModel.roomList) {
+        if (room.id == roomId) {
+            roomModel = room
+            break;
+        }
+    }
+
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -54,8 +74,8 @@ fun HotelSelectionSection(bookingInfo: BookingInfo) {
             verticalAlignment = Alignment.Top
         ) {
             // Hotel image
-            Image(
-                painter = painterResource(id = R.drawable.hotel1),
+            AsyncImage(
+                model = hotelModel.thumbnailImages!![0],
                 contentDescription = "Hotel image",
                 modifier = Modifier
                     .size(80.dp)
@@ -70,7 +90,7 @@ fun HotelSelectionSection(bookingInfo: BookingInfo) {
                 modifier = Modifier.weight(1f)
             ) {
                 Text(
-                    text = bookingInfo.hotelName,
+                    text = hotelModel.name,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black
@@ -79,7 +99,7 @@ fun HotelSelectionSection(bookingInfo: BookingInfo) {
                 Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
-                    text = bookingInfo.roomName,
+                    text = roomModel!!.id + roomModel.type,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Medium,
                     color = Color.Black
@@ -88,7 +108,7 @@ fun HotelSelectionSection(bookingInfo: BookingInfo) {
                 Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
-                    text = bookingInfo.address,
+                    text = hotelModel.address,
                     fontSize = 12.sp,
                     color = Color.Gray,
                     lineHeight = 16.sp

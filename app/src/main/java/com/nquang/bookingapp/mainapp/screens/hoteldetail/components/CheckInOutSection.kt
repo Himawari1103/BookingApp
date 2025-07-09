@@ -77,15 +77,15 @@ fun CheckInOutSection(
                 }
 
                 Spacer(modifier = Modifier.height(12.dp))
-                val startDay = hotelModel.policies.checkIn.minusHours(2)
+                val startDay = hotelModel.policies.checkIn
                 val endDay = startDay.plusHours(8)
-                val startNight = endDay.plusHours(4)
-                val endNight = startNight.plusHours(8)
+                val startNight = endDay.plusHours(1)
+                val endNight = startNight.plusHours(12)
                 CheckInOutRow("Ban ngày", "Từ $startDay tới $endDay")
                 Spacer(modifier = Modifier.height(8.dp))
                 CheckInOutRow("Qua đêm", "Từ $startNight tới $endNight")
                 Spacer(modifier = Modifier.height(8.dp))
-                CheckInOutRow("Theo ngày", "Từ $startDay tới $endNight")
+                CheckInOutRow("Theo ngày", "Từ ${hotelModel.policies.checkIn} tới ${hotelModel.policies.checkOut}")
             }
         }
 

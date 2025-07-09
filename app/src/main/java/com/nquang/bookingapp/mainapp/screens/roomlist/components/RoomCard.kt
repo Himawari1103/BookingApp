@@ -22,7 +22,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.nquang.bookingapp.mainapp.data.model.roomlist.Room
+import com.nquang.bookingapp.model.HotelModelGet
+import com.nquang.bookingapp.model.RoomModelGet
+import com.nquang.bookingapp.viewmodel.HotelViewModel
 
 /**
  * Card hiển thị thông tin phòng trong danh sách
@@ -31,9 +35,12 @@ import com.nquang.bookingapp.mainapp.data.model.roomlist.Room
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun RoomCard(
-    room: Room,
+    room: RoomModelGet,
     onBookClick: () -> Unit,
-    onDetailClick: () -> Unit
+    onDetailClick: () -> Unit,
+    hotelViewModel: HotelViewModel,
+    hotelModel: HotelModelGet,
+    canBooking: Boolean,
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -54,14 +61,14 @@ fun RoomCard(
                     .fillMaxWidth()
                     .height(200.dp)
             ) {
-                val pagerState = rememberPagerState(pageCount = { room.images.size })
+                val pagerState = rememberPagerState(pageCount = { room.thumbnailImages?.size ?: 0 })
 
                 HorizontalPager(
                     state = pagerState,
                     modifier = Modifier.fillMaxSize()
                 ) { page ->
-                    Image(
-                        painter = painterResource(id = room.images[page]),
+                    AsyncImage(
+                        model = room.thumbnailImages?.get(page),
                         contentDescription = "Ảnh phòng ${page + 1}",
                         modifier = Modifier.fillMaxSize(),
                         contentScale = ContentScale.Crop
@@ -75,7 +82,7 @@ fun RoomCard(
                         .padding(bottom = 8.dp),
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    repeat(room.images.size) { index ->
+                    repeat(room.thumbnailImages?.size ?: 0) { index ->
                         Box(
                             modifier = Modifier
                                 .padding(horizontal = 4.dp)
@@ -96,7 +103,7 @@ fun RoomCard(
             ) {
                 // Tên phòng
                 Text(
-                    text = room.name,
+                    text = room.id + room.type.name,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black
@@ -109,14 +116,14 @@ fun RoomCard(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    room.amenities.take(3).forEachIndexed { index, amenity ->
+                    hotelModel.amenities?.forEachIndexed { index, amenity ->
                         Text(
                             text = amenity,
                             fontSize = 14.sp,
                             color = Color.Gray
                         )
 
-                        if (index < room.amenities.size - 1 && index < 2) {
+                        if (index < hotelModel.amenities.size - 1 && index < 2) {
                             Text(
                                 text = " • ",
                                 fontSize = 14.sp,
@@ -147,7 +154,8 @@ fun RoomCard(
                             containerColor = Color(0xFFFF6B35)
                         ),
                         shape = RoundedCornerShape(24.dp),
-                        modifier = Modifier.height(40.dp)
+                        modifier = Modifier.height(40.dp),
+                        enabled = canBooking
                     ) {
                         Text(
                             text = "Đặt phòng",
@@ -222,13 +230,6 @@ fun RoomCard(
                             text = "Hoàn tiền nếu giá tại khách sạn rẻ hơn. ",
                             fontSize = 14.sp,
                             color = Color.Gray
-                        )
-
-                        Text(
-                            text = "Xem tại đây",
-                            fontSize = 14.sp,
-                            color = Color(0xFFFF6B35),
-                            modifier = Modifier.clickable { }
                         )
                     }
                 }

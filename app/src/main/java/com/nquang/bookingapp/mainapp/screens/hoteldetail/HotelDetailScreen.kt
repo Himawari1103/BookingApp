@@ -99,7 +99,9 @@ fun HotelDetailScreen(
                     .align(Alignment.TopStart)
                     .statusBarsPadding()
                     .padding(top = 8.dp)
-                    .zIndex(10f)
+                    .zIndex(10f),
+                hotelViewModel = hotelViewModel,
+                hotelModel = hotelModel
             )
         }
 
@@ -110,7 +112,8 @@ fun HotelDetailScreen(
                 hotelName = hotelModel.name,
                 modifier = Modifier
                     .align(Alignment.TopStart)
-                    .zIndex(10f)
+                    .zIndex(10f),
+                hotelViewModel = hotelViewModel
             )
         }
 

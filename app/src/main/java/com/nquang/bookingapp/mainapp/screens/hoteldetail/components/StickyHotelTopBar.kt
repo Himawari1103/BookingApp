@@ -16,12 +16,14 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.nquang.bookingapp.viewmodel.HotelViewModel
 
 @Composable
 fun StickyHotelTopBar(
     navController: NavController,
     hotelName: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    hotelViewModel: HotelViewModel
 ) {
     // Surface phủ toàn bộ phần trên bao gồm cả status bar
     Surface(

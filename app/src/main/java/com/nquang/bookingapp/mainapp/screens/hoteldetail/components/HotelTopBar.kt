@@ -11,9 +11,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.google.firebase.auth.FirebaseAuth
+import com.nquang.bookingapp.model.FavouriteHotelModel
+import com.nquang.bookingapp.model.HotelModelGet
+import com.nquang.bookingapp.utils.FirebaseUtils
+import com.nquang.bookingapp.utils.Utils
+import com.nquang.bookingapp.viewmodel.HotelViewModel
 
 @Composable
-fun HotelTopBar(navController: NavController, modifier: Modifier = Modifier) {
+fun HotelTopBar(
+    navController: NavController, modifier: Modifier = Modifier,
+    hotelViewModel: HotelViewModel,
+    hotelModel: HotelModelGet
+) {
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -32,10 +42,18 @@ fun HotelTopBar(navController: NavController, modifier: Modifier = Modifier) {
                 tint = Color.Black
             )
         }
-        
+
         Row {
             IconButton(
-                onClick = { },
+                onClick = {
+                    val favouriteHotelModel = FavouriteHotelModel(
+                        Utils.genUUID(),
+                        FirebaseAuth.getInstance().currentUser!!.uid,
+                        hotelModel.id
+                    )
+
+                    FirebaseUtils.saveFavouriteHotel(favouriteHotelModel)
+                },
                 modifier = Modifier
                     .size(40.dp)
                     .background(Color.White.copy(alpha = 0.9f), CircleShape)
@@ -46,9 +64,9 @@ fun HotelTopBar(navController: NavController, modifier: Modifier = Modifier) {
                     tint = Color.Black
                 )
             }
-            
+
             Spacer(modifier = Modifier.width(15.dp))
-            
+
             IconButton(
                 onClick = { },
                 modifier = Modifier

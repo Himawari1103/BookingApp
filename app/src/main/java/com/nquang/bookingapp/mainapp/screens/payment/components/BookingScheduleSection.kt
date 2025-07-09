@@ -1,5 +1,7 @@
 package com.nquang.bookingapp.mainapp.screens.payment.components
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -14,14 +16,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.nquang.bookingapp.mainapp.data.model.payment.BookingInfo
+import com.nquang.bookingapp.utils.Utils
+import com.nquang.bookingapp.viewmodel.HotelViewModel
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun BookingScheduleSection(bookingInfo: BookingInfo) {
-    val cardColor = if (bookingInfo.isNightBooking) {
-        Color(0xFFF0F0FF) // Light purple for night
-    } else {
-        Color(0xFFFF6B35) // Orange for day - matching image 2
-    }
+fun BookingScheduleSection(
+    hotelViewModel: HotelViewModel
+) {
+    val cardColor = Color(0xFFFF6B35)
 
     // Schedule card matching the design in image 2
     Card(
@@ -42,7 +45,7 @@ fun BookingScheduleSection(bookingInfo: BookingInfo) {
                 modifier = Modifier.width(60.dp)
             ) {
                 Icon(
-                    if (bookingInfo.isNightBooking) Icons.Default.Schedule else Icons.Default.AccessTime,
+                    Icons.Default.AccessTime,
                     contentDescription = "Duration",
                     tint = Color.White,
                     modifier = Modifier.size(24.dp)
@@ -51,7 +54,7 @@ fun BookingScheduleSection(bookingInfo: BookingInfo) {
                 Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
-                    text = bookingInfo.duration,
+                    text = hotelViewModel.newRoomBookingModel.value!!.type.value,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White
@@ -71,12 +74,15 @@ fun BookingScheduleSection(bookingInfo: BookingInfo) {
                     color = Color.White.copy(alpha = 0.9f)
                 )
 
-                Text(
-                    text = "${bookingInfo.checkInTime} • ${bookingInfo.checkInDate}",
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = Color.White
-                )
+                Utils.localDateTimeToStringWithTime(hotelViewModel.newRoomBookingModel.value?.checkInDateTime!!)
+                    ?.let {
+                        Text(
+                            text = it,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = Color.White
+                        )
+                    }
 
                 Spacer(modifier = Modifier.height(8.dp))
 
@@ -88,7 +94,7 @@ fun BookingScheduleSection(bookingInfo: BookingInfo) {
                 )
 
                 Text(
-                    text = "${bookingInfo.checkOutTime} • ${bookingInfo.checkOutDate}",
+                    text = Utils.localDateTimeToStringWithTime(hotelViewModel.newRoomBookingModel.value?.checkOutDateTime!!)!!,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Medium,
                     color = Color.White

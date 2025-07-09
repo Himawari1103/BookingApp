@@ -12,11 +12,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.nquang.bookingapp.mainapp.data.model.payment.GuestInfo
+import com.nquang.bookingapp.viewmodel.UserViewModel
 
 @Composable
 fun GuestInfoSection(
-    guestInfo: GuestInfo,
-    onEditClick: () -> Unit
+//    guestInfo: GuestInfo,
+    onEditClick: () -> Unit,
+    userViewModel: UserViewModel
 ) {
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -50,15 +52,15 @@ fun GuestInfoSection(
                     color = Color.Black
                 )
             }
-
-            TextButton(onClick = onEditClick) {
-                Text(
-                    text = "Sửa",
-                    fontSize = 16.sp,
-                    color = Color(0xFFFF6B35),
-                    fontWeight = FontWeight.Medium
-                )
-            }
+//
+//            TextButton(onClick = onEditClick) {
+//                Text(
+//                    text = "Sửa",
+//                    fontSize = 16.sp,
+//                    color = Color(0xFFFF6B35),
+//                    fontWeight = FontWeight.Medium
+//                )
+//            }
         }
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -75,7 +77,7 @@ fun GuestInfoSection(
             )
 
             Text(
-                text = guestInfo.phoneNumber,
+                text = userViewModel.userModel.value?.phoneNumber ?: "",
                 fontSize = 14.sp,
                 color = Color.Black,
                 fontWeight = FontWeight.Medium
@@ -96,7 +98,7 @@ fun GuestInfoSection(
             )
 
             Text(
-                text = guestInfo.fullName,
+                text = userViewModel.userModel.value?.fullName ?: "",
                 fontSize = 14.sp,
                 color = Color.Black,
                 fontWeight = FontWeight.Medium

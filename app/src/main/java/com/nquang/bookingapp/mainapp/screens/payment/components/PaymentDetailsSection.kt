@@ -1,5 +1,7 @@
 package com.nquang.bookingapp.mainapp.screens.payment.components
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -18,13 +20,20 @@ import androidx.compose.ui.unit.sp
 import com.nquang.bookingapp.mainapp.data.model.payment.PaymentMethod
 import com.nquang.bookingapp.mainapp.data.model.payment.PaymentSummary
 import com.nquang.bookingapp.R
+import com.nquang.bookingapp.model.HotelModelGet
+import com.nquang.bookingapp.model.RoomBookingType
+import com.nquang.bookingapp.model.RoomModelGet
+import com.nquang.bookingapp.viewmodel.HotelViewModel
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun PaymentDetailsSection(
-    paymentSummary: PaymentSummary,
     selectedPaymentMethod: PaymentMethod?,
-    onSelectPaymentMethod: () -> Unit
+    onSelectPaymentMethod: () -> Unit,
+    paymentSummary:String
 ) {
+
+
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -66,7 +75,7 @@ fun PaymentDetailsSection(
             )
 
             Text(
-                text = "${paymentSummary.roomPrice}đ",
+                text = paymentSummary + "đ",
                 fontSize = 14.sp,
                 color = Color.Black,
                 fontWeight = FontWeight.Medium
@@ -88,7 +97,7 @@ fun PaymentDetailsSection(
             )
 
             Text(
-                text = "${paymentSummary.totalAmount}đ",
+                text = paymentSummary + "đ",
                 fontSize = 16.sp,
                 color = Color.Black,
                 fontWeight = FontWeight.Bold

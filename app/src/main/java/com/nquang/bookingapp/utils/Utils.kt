@@ -48,7 +48,7 @@ class Utils {
         @RequiresApi(Build.VERSION_CODES.O)
         fun stringToLocalDateTime(str: String?): LocalDateTime? {
             val dtfDate = DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm:ss")
-            return LocalDateTime.parse(str + " - 00:00:00", dtfDate)
+            return LocalDateTime.parse("$str - 00:00:00", dtfDate)
         }
 
         @RequiresApi(Build.VERSION_CODES.O)
