@@ -11,6 +11,7 @@ import com.nquang.bookingapp.mainapp.data.repository.RoomRepository
 import com.nquang.bookingapp.model.HotelModelGet
 import com.nquang.bookingapp.model.RoomBookingStatus
 import com.nquang.bookingapp.viewmodel.HotelViewModel
+import java.time.LocalDateTime
 
 /**
  * Nội dung danh sách phòng
@@ -58,10 +59,10 @@ fun RoomListContent(
                                 break;
                             }
                         }
-
                     }
                 }
             }
+            if(!currentCheckIn!!.isAfter(LocalDateTime.now())) canBooking = false
             RoomCard(
                 room = room,
                 onBookClick = {

@@ -1,6 +1,8 @@
 package com.nquang.bookingapp.mainapp.screens.payment
 
+import android.content.Context
 import android.os.Build
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -9,6 +11,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
@@ -39,6 +42,8 @@ fun PaymentScreen(
     hotelViewModel: HotelViewModel,
     userViewModel: UserViewModel
 ) {
+    val context: Context = LocalContext.current
+
     var hotelModel: HotelModelGet? = null
     for (hotel in hotelViewModel.hotelModels) {
         if (hotel!!.id == hotelId) {
@@ -202,8 +207,9 @@ fun PaymentScreen(
                                 RoomBookingType.ONLY_NIGHT
                             )
                         )
+                        Toast.makeText(context, "Đặt phòng thành công", Toast.LENGTH_SHORT).show()
                     }
-                    navController.navigate("home")
+                    navController.navigate("bookings")
                 },
                 modifier = Modifier.align(Alignment.BottomCenter)
             )

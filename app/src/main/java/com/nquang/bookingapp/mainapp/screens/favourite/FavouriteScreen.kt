@@ -32,7 +32,7 @@ fun FavoritesScreen(
 ) {
     val favoriteHotels = hotelViewModel.favouriteHotelModels
 
-    val hotelModels = hotelViewModel.hotelModels.filter { hotelViewModel ->
+    var hotelModels = hotelViewModel.hotelModels.filter { hotelViewModel ->
         for (favouriteHotel in favoriteHotels) {
             if (favouriteHotel!!.hotelId == hotelViewModel!!.id) {
                 return@filter true
@@ -40,6 +40,7 @@ fun FavoritesScreen(
         }
         false
     }
+
 
     Column(modifier = Modifier.fillMaxSize()) {
         // Header
@@ -83,7 +84,7 @@ fun FavoritesScreen(
         }
 
         // Content
-        if (favoriteHotels.isEmpty()) {
+        if (hotelModels.isEmpty()) {
             // Empty state
             Column(
                 modifier = Modifier
@@ -141,14 +142,24 @@ fun FavoritesScreen(
             ) {
                 item {
                     Text(
-                        text = "${favoriteHotels.size} khách sạn yêu thích",
+                        text = "${hotelModels.size} khách sạn yêu thích",
                         fontSize = 16.sp,
                         color = Color.Gray,
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
                 }
 
-                items(hotelModels) { hotel ->
+                items(hotelViewModel.hotelModels) { hotel ->
+                    var canDisplay = false
+                    for (favouriteHotel in favoriteHotels) {
+                        if (favouriteHotel!!.hotelId == hotel!!.id) {
+                            canDisplay = true
+                            break
+                        }
+                    }
+                    if (!canDisplay) {
+                        return@items
+                    }
                     HotelCard(
                         hotel = hotel!!,
                         onHotelClick = {

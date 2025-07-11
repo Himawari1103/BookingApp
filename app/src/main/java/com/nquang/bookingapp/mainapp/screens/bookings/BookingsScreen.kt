@@ -1,6 +1,7 @@
 package com.nquang.bookingapp.mainapp.screens.bookings
 
 import android.os.Build
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -10,6 +11,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
@@ -48,6 +50,8 @@ fun BookingsScreen(
     } else {
         allBookings.filter { it?.status == selectedStatus }
     }
+
+    val context = LocalContext.current
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -128,14 +132,11 @@ fun BookingsScreen(
                     selectedBooking = null
                 },
                 onDelete = { booking ->
-                    // Handle delete
-//                    BookingRepository.deleteBooking(booking.id)
                     hotelViewModel.roomBookingModels.removeIf { it?.id == booking.id }
                     FirebaseUtils.removeRoomBookingById(booking.id)
-                    // Show success message or refresh list
+                    Toast.makeText(context, "Đã xóa lịch sử đặt phòng thành công", Toast.LENGTH_SHORT).show()
                 },
                 onCancel = { booking ->
-                    // Handle report error
                     val roomBookingModel = hotelViewModel.roomBookingModels.filter { it?.id == booking.id }[0]?.copy(status = RoomBookingStatus.CANCELLED)
                     hotelViewModel.roomBookingModels.removeIf { it?.id == booking.id }
                     hotelViewModel.roomBookingModels.add(roomBookingModel)
@@ -152,7 +153,7 @@ fun BookingsScreen(
                             )
                         )
                     }
-                    // Show success message
+                    Toast.makeText(context, "Đã hủy thành công", Toast.LENGTH_SHORT).show()
                 }
             )
         }

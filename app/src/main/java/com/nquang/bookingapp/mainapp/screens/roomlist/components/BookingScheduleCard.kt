@@ -1,43 +1,32 @@
 package com.nquang.bookingapp.mainapp.screens.roomlist.components
 
-import android.app.DatePickerDialog
 import android.os.Build
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.CalendarToday
-import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.nquang.bookingapp.model.HotelModelGet
 import com.nquang.bookingapp.model.RoomBookingType
 import com.nquang.bookingapp.utils.Utils
 import com.nquang.bookingapp.viewmodel.HotelViewModel
 import java.text.SimpleDateFormat
 import java.time.Instant
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.Calendar
-import java.util.Date
 import java.util.Locale
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -62,13 +51,13 @@ fun BookingScheduleCard(
 //    val checkOutTime = if (isNightBooking) "12:00, 05/06" else "18:30, 05/06"
 
     var checkInDate by remember { mutableStateOf<Long?>(null) }
-    var checkOutDate by remember { mutableStateOf<Long?>(null) }
-    var rentalType by remember { mutableStateOf<String?>(null) }
+//    var checkOutDate by remember { mutableStateOf<Long?>(null) }
+//    var rentalType by remember { mutableStateOf<String?>(null) }
     var showCheckInPicker by remember { mutableStateOf(false) }
     var showCheckOutPicker by remember { mutableStateOf(false) }
     var expanded by remember { mutableStateOf(false) }
     val context = LocalContext.current
-    val coroutineScope = rememberCoroutineScope()
+//    val coroutineScope = rememberCoroutineScope()
 
     val roomBookingModel = hotelViewModel.newRoomBookingModel.value
 
@@ -77,9 +66,9 @@ fun BookingScheduleCard(
 
     // Danh sách loại hình thuê phòng
     val rentalTypes = listOf(
-        RoomBookingType.ONLY_NIGHT.name,
-        RoomBookingType.ONLY_DAY.name,
-        RoomBookingType.FULL_DAY.name
+        RoomBookingType.ONLY_NIGHT.value,
+        RoomBookingType.ONLY_DAY.value,
+        RoomBookingType.FULL_DAY.value
     )
 
     val checkInTime: String = if (roomBookingModel?.type != null) {
@@ -101,6 +90,12 @@ fun BookingScheduleCard(
             Utils.localTimeToString(hotelModel.policies.checkOut)!!
         } else ""
     } else ""
+    hotelViewModel.updateTimeCheckInDateTimeNewRoomBookingModel(checkInTime)
+    hotelViewModel.updateTimeCheckOutDateTimeNewRoomBookingModel(checkOutTime)
+
+    val checkInDateTime = hotelViewModel.newRoomBookingModel.value!!.checkInDateTime
+    val checkOutDateTime = hotelViewModel.newRoomBookingModel.value!!.checkOutDateTime
+    val currentType = hotelViewModel.newRoomBookingModel.value!!.type
 
     val calendar = Calendar.getInstance()
     val currentHour = calendar.get(Calendar.HOUR_OF_DAY)
@@ -135,7 +130,7 @@ fun BookingScheduleCard(
             // Dropdown Menu chọn loại hình thuê phòng
             Box {
                 OutlinedTextField(
-                    value = roomBookingModel?.type?.name ?: rentalTypes[0],
+                    value = roomBookingModel?.type?.value ?: rentalTypes[0],
                     onValueChange = {},
                     label = { Text("Loại hình thuê phòng") },
                     readOnly = true,
@@ -158,6 +153,27 @@ fun BookingScheduleCard(
                             text = { Text(type) },
                             onClick = {
                                 hotelViewModel.updateTypeNewRoomBookingModel(type)
+                                hotelViewModel.updateTimeCheckInDateTimeNewRoomBookingModel(
+                                    checkInTime
+                                )
+                                hotelViewModel.updateTimeCheckOutDateTimeNewRoomBookingModel(
+                                    checkOutTime
+                                )
+                                if (type == RoomBookingType.ONLY_DAY.value) {
+                                    hotelViewModel.updateCheckOutDateTimeNewRoomBookingModel(
+                                        checkInDateTime
+                                            .withHour(checkOutDateTime.hour)
+                                            .withMinute(checkOutDateTime.minute)
+                                            .withSecond(checkOutDateTime.second)
+                                    )
+                                } else {
+                                    hotelViewModel.updateCheckOutDateTimeNewRoomBookingModel(
+                                        checkInDateTime.plusDays(1)
+                                            .withHour(checkOutDateTime.hour)
+                                            .withMinute(checkOutDateTime.minute)
+                                            .withSecond(checkOutDateTime.second)
+                                    )
+                                }
                                 expanded = false
                             }
                         )
@@ -174,7 +190,7 @@ fun BookingScheduleCard(
                 value = (if (roomBookingModel?.checkInDateTime != null) Utils.localDateTimeToString(
                     roomBookingModel.checkInDateTime
                 )!! else "") + "-" + checkInTime,
-                onValueChange = hotelViewModel::updateCheckInDateTimeNewRoomBookingModel,
+                onValueChange = hotelViewModel::updateCheckInDateTimeNewRoomBookingModelWithString,
                 label = { Text("Ngày nhận phòng") },
                 readOnly = true,
                 modifier = Modifier
@@ -195,7 +211,7 @@ fun BookingScheduleCard(
                 value = (if (roomBookingModel?.checkOutDateTime != null) Utils.localDateTimeToString(
                     roomBookingModel.checkOutDateTime
                 )!! else "") + "-" + checkOutTime,
-                onValueChange = hotelViewModel::updateCheckOutDateTimeNewRoomBookingModel,
+                onValueChange = hotelViewModel::updateCheckOutDateTimeNewRoomBookingModelWithString,
                 label = { Text("Ngày trả phòng") },
                 readOnly = true,
                 modifier = Modifier
@@ -213,22 +229,41 @@ fun BookingScheduleCard(
         }
     }
 
-    // Date Picker cho ngày check-in
+    // Date Picker for check-in
     if (showCheckInPicker) {
         val datePickerState = rememberDatePickerState(
-            initialSelectedDateMillis = System.currentTimeMillis()
+            initialSelectedDateMillis = checkInDateTime.atZone(ZoneId.of("Asia/Ho_Chi_Minh"))
+                .toInstant().toEpochMilli()
         )
         DatePickerDialog(
             onDismissRequest = { showCheckInPicker = false },
             confirmButton = {
                 TextButton(onClick = {
                     datePickerState.selectedDateMillis?.let { selectedDate ->
-                        if (selectedDate >= minCheckInDate) {
-                            hotelViewModel.updateCheckInDateTimeNewRoomBookingModel(
-                                dateFormatter.format(
-                                    Date(selectedDate)
-                                ) + " - " + checkInTime
-                            )
+                        val selectedDateTime = Instant.ofEpochMilli(
+                            selectedDate
+                        ).atZone(
+                            ZoneId.of("Asia/Ho_Chi_Minh")
+                        ).toLocalDateTime().withHour(checkInDateTime.hour)
+                            .withMinute(checkInDateTime.minute)
+                            .withSecond(checkInDateTime.second)
+                        if (selectedDateTime.isAfter(LocalDateTime.now())) {
+                            hotelViewModel.updateCheckInDateTimeNewRoomBookingModel(selectedDateTime)
+                            if (currentType == RoomBookingType.ONLY_DAY) {
+                                hotelViewModel.updateCheckOutDateTimeNewRoomBookingModel(
+                                    selectedDateTime
+                                        .withHour(checkOutDateTime.hour)
+                                        .withMinute(checkOutDateTime.minute)
+                                        .withSecond(checkOutDateTime.second)
+                                )
+                            } else {
+                                hotelViewModel.updateCheckOutDateTimeNewRoomBookingModel(
+                                    selectedDateTime.plusDays(1)
+                                        .withHour(checkOutDateTime.hour)
+                                        .withMinute(checkOutDateTime.minute)
+                                        .withSecond(checkOutDateTime.second)
+                                )
+                            }
                         } else {
                             val message = if (isAfter2PM) {
                                 "Vui lòng chọn ngày từ ngày mai trở đi"
@@ -253,30 +288,43 @@ fun BookingScheduleCard(
         }
     }
 
-    // Date Picker cho ngày check-out
+    // Date Picker for check-out
     if (showCheckOutPicker) {
         val datePickerState = rememberDatePickerState(
-            initialSelectedDateMillis = checkInDate ?: System.currentTimeMillis()
+            initialSelectedDateMillis = checkOutDateTime.atZone(ZoneId.of("Asia/Ho_Chi_Minh"))
+                .toInstant().toEpochMilli()
         )
         DatePickerDialog(
             onDismissRequest = { showCheckOutPicker = false },
             confirmButton = {
                 TextButton(onClick = {
                     datePickerState.selectedDateMillis?.let { selectedDate ->
-                        if (roomBookingModel?.checkInDateTime == null || Instant.ofEpochMilli(
-                                selectedDate
-                            ).atZone(
-                                ZoneId.of("Asia/Ho_Chi_Minh")
-                            ).toLocalDateTime().withHour(0).withMinute(0).withSecond(0).isAfter(
-                                roomBookingModel.checkInDateTime.withHour(0).withMinute(0)
-                                    .withSecond(0)
-                            )
-                        ) {
+                        val selectedDateTime = Instant.ofEpochMilli(
+                            selectedDate
+                        ).atZone(
+                            ZoneId.of("Asia/Ho_Chi_Minh")
+                        ).toLocalDateTime().withHour(checkOutDateTime.hour)
+                            .withMinute(checkOutDateTime.minute)
+                            .withSecond(checkOutDateTime.second)
+                        if (selectedDateTime.isAfter(checkInDateTime)) {
                             hotelViewModel.updateCheckOutDateTimeNewRoomBookingModel(
-                                dateFormatter.format(
-                                    Date(selectedDate)
-                                ) + " - " + checkOutTime
+                                selectedDateTime
                             )
+                            if (currentType == RoomBookingType.ONLY_NIGHT) {
+                                hotelViewModel.updateCheckInDateTimeNewRoomBookingModel(
+                                    selectedDateTime.minusDays(1)
+                                        .withHour(checkInDateTime.hour)
+                                        .withMinute(checkInDateTime.minute)
+                                        .withSecond(checkInDateTime.second)
+                                )
+                            } else if (currentType == RoomBookingType.ONLY_DAY) {
+                                hotelViewModel.updateCheckInDateTimeNewRoomBookingModel(
+                                    selectedDateTime
+                                        .withHour(checkInDateTime.hour)
+                                        .withMinute(checkInDateTime.minute)
+                                        .withSecond(checkInDateTime.second)
+                                )
+                            }
                         } else {
                             Toast.makeText(
                                 context,

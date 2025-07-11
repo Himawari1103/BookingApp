@@ -343,10 +343,10 @@ class FirebaseUtils {
                             hotelId = hotelId!!,
                         )
                     }
-                Log.d("FindAllRoomBooking Debug", "Found ${favouriteHotelList.size} roomBookings")
+                Log.d("FindAllFavouriteHotel Debug", "Found ${favouriteHotelList.size} favouriteHotels")
                 favouriteHotelList
             } catch (e: Exception) {
-                Log.e("FindAllRoomBooking Error", "Error finding all hotels: ${e.message}")
+                Log.e("FindAllFavouriteHotel Error", "Error finding all favourite hotels: ${e.message}")
                 emptyList()
             }
         }

@@ -32,6 +32,7 @@ import com.nquang.bookingapp.login.viewmodel.LoginViewModel
 import com.nquang.bookingapp.login.viewmodel.RegisterViewModel
 import com.nquang.bookingapp.model.UserModel
 import com.nquang.bookingapp.utils.FirebaseUtils
+import com.nquang.bookingapp.viewmodel.HotelViewModel
 import kotlinx.coroutines.launch
 
 // Define navigation routes

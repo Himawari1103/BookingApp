@@ -18,12 +18,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
+import com.google.firebase.auth.FirebaseAuth
 import com.nquang.bookingapp.login.login.LoginScreen
 import com.nquang.bookingapp.navigation.AuthNavigation
 import com.nquang.bookingapp.login.ui.theme.LoginTheme
+import com.nquang.bookingapp.model.RoomBookingModelGet
+import com.nquang.bookingapp.model.RoomBookingStatus
+import com.nquang.bookingapp.model.RoomBookingType
 import com.nquang.bookingapp.navigation.MainNavigation
+import com.nquang.bookingapp.utils.Utils
 import com.nquang.bookingapp.viewmodel.HotelViewModel
 import com.nquang.bookingapp.viewmodel.UserViewModel
+import java.time.LocalDateTime
 
 class MainActivity : ComponentActivity() {
 
@@ -43,6 +49,15 @@ class MainActivity : ComponentActivity() {
                         AuthNavigation(
 //                            navController = authNavController,
                             onLoginSuccess = {
+                                hotelViewModel.newRoomBookingModel.value = RoomBookingModelGet(
+                                    Utils.genUUID(),
+                                    FirebaseAuth.getInstance().currentUser!!.uid,
+                                    "",
+                                    LocalDateTime.now(),
+                                    LocalDateTime.now().plusDays(1),
+                                    RoomBookingStatus.PENDING,
+                                    RoomBookingType.ONLY_NIGHT
+                                )
                                 isAuthenticated = true
                                 userViewModel.fetchUserData()
                             },

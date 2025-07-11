@@ -1,6 +1,7 @@
 package com.nquang.bookingapp.mainapp.screens.hoteldetails.components
 
 import android.os.Build
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -16,6 +17,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
@@ -39,6 +41,7 @@ fun HotelTopBar(
         isFav = true
     }
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -70,11 +73,13 @@ fun HotelTopBar(
                         )
                         FirebaseUtils.saveFavouriteHotel(favouriteHotelModel)
                         hotelViewModel.favouriteHotelModels.add(favouriteHotelModel)
+                        Toast.makeText(context, "Thêm vào danh sách yêu thích thành công", Toast.LENGTH_SHORT).show()
                     } else {
                         scope.launch {
                             FirebaseUtils.removeFavouriteHotelByUserIdAndHotelId(FirebaseAuth.getInstance().currentUser!!.uid, hotelModel.id)
                             hotelViewModel.favouriteHotelModels.removeIf { it!!.userId == FirebaseAuth.getInstance().currentUser!!.uid && it.hotelId == hotelModel.id }
-                        }
+                        }.onJoin
+                        Toast.makeText(context, "Xóa khỏi danh sách yêu thích thành công", Toast.LENGTH_SHORT).show()
                     }
                 },
                 modifier = Modifier

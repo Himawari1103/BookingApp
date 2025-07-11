@@ -37,17 +37,17 @@ fun BookingHeader(
                     .padding(horizontal = 16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                IconButton(
-                    onClick = onBackClick,
-                    modifier = Modifier.size(40.dp)
-                ) {
-                    Icon(
-                        Icons.Default.ArrowBack,
-                        contentDescription = "Back",
-                        tint = Color.Black
-                    )
-                }
-                
+//                IconButton(
+//                    onClick = onBackClick,
+//                    modifier = Modifier.size(40.dp)
+//                ) {
+//                    Icon(
+//                        Icons.Default.ArrowBack,
+//                        contentDescription = "Back",
+//                        tint = Color.Black
+//                    )
+//                }
+//
                 Text(
                     text = "Phòng đã đặt",
                     fontSize = 18.sp,

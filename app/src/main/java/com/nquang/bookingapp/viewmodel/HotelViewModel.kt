@@ -7,7 +7,6 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.auth.FirebaseAuth
 import com.nquang.bookingapp.model.FavouriteHotelModel
 import com.nquang.bookingapp.model.HotelModelGet
 import com.nquang.bookingapp.model.RoomBookingModelGet
@@ -16,7 +15,6 @@ import com.nquang.bookingapp.model.RoomBookingType
 import com.nquang.bookingapp.model.RoomModelGet
 import com.nquang.bookingapp.utils.FirebaseUtils
 import com.nquang.bookingapp.utils.Utils
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
@@ -26,17 +24,7 @@ class HotelViewModel : ViewModel() {
     val roomModels = mutableStateListOf<RoomModelGet?>()
     val roomBookingModels = mutableStateListOf<RoomBookingModelGet?>()
     val favouriteHotelModels = mutableStateListOf<FavouriteHotelModel?>()
-    var newRoomBookingModel = mutableStateOf<RoomBookingModelGet?>(
-        RoomBookingModelGet(
-            Utils.genUUID(),
-            FirebaseAuth.getInstance().currentUser!!.uid,
-            "",
-            LocalDateTime.now(),
-            LocalDateTime.now().plusDays(1),
-            RoomBookingStatus.PENDING,
-            RoomBookingType.ONLY_NIGHT
-        )
-    )
+    var newRoomBookingModel = mutableStateOf<RoomBookingModelGet?>(null)
 
     init {
         fetchHotelData()
@@ -67,7 +55,8 @@ class HotelViewModel : ViewModel() {
                 roomModels.addAll(roomList)
                 Log.d("HotelViewModel", "Number of room: ${roomList.size}")
 
-                val favouriteHotelList: List<FavouriteHotelModel> = FirebaseUtils.findAllFavouriteHotel()
+                val favouriteHotelList: List<FavouriteHotelModel> =
+                    FirebaseUtils.findAllFavouriteHotel()
                 for (favouriteHotel in favouriteHotelList) {
                     Log.d("HotelViewModel", "Favourite Hotel: $favouriteHotel")
                 }
@@ -87,16 +76,28 @@ class HotelViewModel : ViewModel() {
         newRoomBookingModel.value = newRoomBookingModel.value?.copy(roomId = roomId)
     }
 
-    fun updateCheckInDateTimeNewRoomBookingModel(checkInDateTime: String) {
+    fun updateCheckInDateTimeNewRoomBookingModelWithString(checkInDateTime: String) {
         val testLcd: LocalDateTime = Utils.stringToLocalDateTimeWithTime(checkInDateTime)!!
         newRoomBookingModel.value = newRoomBookingModel.value?.copy(
             checkInDateTime = testLcd
         )
     }
 
-    fun updateCheckOutDateTimeNewRoomBookingModel(checkOutDateTime: String) {
+    fun updateCheckOutDateTimeNewRoomBookingModelWithString(checkOutDateTime: String) {
         newRoomBookingModel.value = newRoomBookingModel.value?.copy(
             checkOutDateTime = Utils.stringToLocalDateTimeWithTime(checkOutDateTime)!!
+        )
+    }
+
+    fun updateCheckInDateTimeNewRoomBookingModel(checkInDateTime: LocalDateTime) {
+        newRoomBookingModel.value = newRoomBookingModel.value?.copy(
+            checkInDateTime = checkInDateTime
+        )
+    }
+
+    fun updateCheckOutDateTimeNewRoomBookingModel(checkOutDateTime: LocalDateTime) {
+        newRoomBookingModel.value = newRoomBookingModel.value?.copy(
+            checkOutDateTime = checkOutDateTime
         )
     }
 
@@ -107,8 +108,21 @@ class HotelViewModel : ViewModel() {
 
     fun updateTypeNewRoomBookingModel(type: String) {
         newRoomBookingModel.value =
-            newRoomBookingModel.value?.copy(type = RoomBookingType.valueOf(type))
+            newRoomBookingModel.value?.copy(type = RoomBookingType.fromValue(type)!!)
+    }
 
+    fun updateTimeCheckInDateTimeNewRoomBookingModel(time: String) {
+        val newStringDateTime = Utils.localDateTimeToString(newRoomBookingModel.value!!.checkInDateTime) + " - " + time
+        newRoomBookingModel.value = newRoomBookingModel.value?.copy(
+            checkInDateTime = Utils.stringToLocalDateTimeWithTime(newStringDateTime)!!
+        )
+    }
+
+    fun updateTimeCheckOutDateTimeNewRoomBookingModel(time: String) {
+        val newStringDateTime = Utils.localDateTimeToString(newRoomBookingModel.value!!.checkOutDateTime) + " - " + time
+        newRoomBookingModel.value = newRoomBookingModel.value?.copy(
+            checkOutDateTime = Utils.stringToLocalDateTimeWithTime(newStringDateTime)!!
+        )
     }
 
 }

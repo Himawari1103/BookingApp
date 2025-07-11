@@ -1,6 +1,7 @@
 package com.nquang.bookingapp.mainapp.screens.bookingdetail
 
 import android.os.Build
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -9,6 +10,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
@@ -44,6 +46,8 @@ fun BookingDetailScreen(
     }
 
     val scrollState = rememberScrollState()
+
+    val context = LocalContext.current
 
     Box(modifier = Modifier.fillMaxSize()) {
         // Main content
@@ -154,6 +158,7 @@ fun BookingDetailScreen(
                                 userId = roomBookingModel.userId,
                             )
                         )
+                        Toast.makeText(context, "Đã hủy thành công", Toast.LENGTH_SHORT).show()
                     }
                     showCancelDialog = false
 

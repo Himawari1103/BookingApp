@@ -33,5 +33,11 @@ enum class RoomBookingStatus(val value: String, val color: Color) {
 enum class RoomBookingType(val value: String) {
     ONLY_DAY("Ban ngày"), // checkIn -> checkIn + 8
     ONLY_NIGHT("Qua đêm"), // checkIn + 9 -> checkIn + 20
-    FULL_DAY("Cả ngày") // checkIn -> checkOut
+    FULL_DAY("Cả ngày"); // checkIn -> checkOut
+
+    companion object {
+        fun fromValue(value: String): RoomBookingType? {
+            return entries.find { it.value == value }
+        }
+    }
 }

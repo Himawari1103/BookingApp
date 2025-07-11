@@ -65,12 +65,16 @@ class RegisterViewModel : ViewModel() {
         if (password != confirmPassword) return false;
         return try {
             _authState.value = AuthState.Loading
+            val userFirebase = FirebaseUtils.findUserByEmail(email)
+            if (userFirebase != null) {
+                _authState.value = AuthState.Error("Email already exists")
+                return false
+            }
             val result = auth.createUserWithEmailAndPassword(email, password).await()
             val firebaseUser = result.user
             if (firebaseUser != null) {
                 val user = UserModel(fullName = fullName,email = email, uid = firebaseUser.uid)
                 FirebaseUtils.saveUserdata(user)
-//                saveUserdata(auth.currentUser!!.uid,user.fullName!!, user.email!!)
                 _authState.value = AuthState.Success(user)
                 true
             } else {

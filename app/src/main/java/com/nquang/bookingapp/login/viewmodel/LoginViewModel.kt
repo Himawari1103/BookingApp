@@ -103,22 +103,17 @@ class LoginViewModel : ViewModel() {
         login: () -> Unit
     ) {
         viewModelScope.launch {
-            _loginState.value = LoginState.Loading
-//            val user = FirebaseAuth.getInstance().currentUser!!
-//            val firebaseUser =
-//                FirebaseUtils.findUserByEmail(user.email!!)
-
+//            _loginState.value = LoginState.Loading
             try {
                 GoogleSignInUtils.doGoogleSignIn(
                     context = context,
                     scope = scope,
                     launcher = launcher,
                     login = login,
-//                    firebaseUser = firebaseUser
                 )
 
             } catch (e: Exception) {
-                _loginState.value = LoginState.Error("Google login failed: ${e.message}")
+//                _loginState.value = LoginState.Error("Google login failed: ${e.message}")
                 Toast.makeText(context, "Google login failed: ${e.message}", Toast.LENGTH_SHORT)
                     .show()
             }

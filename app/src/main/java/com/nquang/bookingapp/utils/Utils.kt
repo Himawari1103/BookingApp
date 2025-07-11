@@ -58,12 +58,6 @@ class Utils {
         }
 
         @RequiresApi(Build.VERSION_CODES.O)
-        fun localDateTimeToStringWithTimeSql(lcDateTime: LocalDateTime): String? {
-            val dtfDate = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
-            return lcDateTime.format(dtfDate)
-        }
-
-        @RequiresApi(Build.VERSION_CODES.O)
         fun stringToLocalDateTimeWithTime(str: String?): LocalDateTime? {
             val dtfDate = DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm:ss")
             return LocalDateTime.parse(str, dtfDate)
